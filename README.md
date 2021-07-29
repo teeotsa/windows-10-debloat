@@ -1,7 +1,7 @@
 # Windows 10 Debloater
-This script is based of Chris Titus Tech's script! 
+# For 21H1 or higher!
 
-For 21H1 or higher!
+This script is based of Chris Titus Tech's script! 
 
 ! THERE IS NOWAY TO REVERT BACK AFTER YOU RAN THIS SCRIPT ! (bad english moment)
 
