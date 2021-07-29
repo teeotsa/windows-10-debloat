@@ -115,6 +115,13 @@ $enablewindowsupdate.height      = 30
 $enablewindowsupdate.location    = New-Object System.Drawing.Point(5,66)
 $enablewindowsupdate.Font        = New-Object System.Drawing.Font('Microsoft Sans Serif',14)
 
+$smalltaskbaricons               = New-Object system.Windows.Forms.Button
+$smalltaskbaricons.text          = "Use Small Taskbar"
+$smalltaskbaricons.width         = 250
+$smalltaskbaricons.height        = 30
+$smalltaskbaricons.location      = New-Object System.Drawing.Point(5,106)
+$smalltaskbaricons.Font          = New-Object System.Drawing.Font('Microsoft Sans Serif',12)
+
 $lightmode                       = New-Object system.Windows.Forms.Button
 $lightmode.text                  = "Light Mode"
 $lightmode.width                 = 204
@@ -129,7 +136,7 @@ $Panel3.location                 = New-Object System.Drawing.Point(464,54)
 
 $Form.controls.AddRange(@($Panel1,$Panel2,$Label3,$Label15,$Panel4,$PictureBox1,$Label1,$Label4,$Panel3))
 $Panel2.controls.AddRange(@($essentialtweaks,$backgroundapps,$cortana,$actioncenter,$darkmode,$visualfx,$onedrive,$lightmode))
-$Panel4.controls.AddRange(@($disablewindowsupdate,$enablewindowsupdate,$Label16,$Label17,$Label18,$Label19))
+$Panel4.controls.AddRange(@($disablewindowsupdate,$enablewindowsupdate,$smalltaskbaricons,$Label16,$Label17,$Label18,$Label19))
 
 $essentialtweaks.Add_Click({
     #No restore points! :)
@@ -303,183 +310,381 @@ $essentialtweaks.Add_Click({
     #LanmanWorkstation
     #WlanSvc
     #W32Time
+
+    #Disable Workstation Service
     Set-Service -StartupType Disabled "LanmanWorkstation"
     Stop-Service -Force -Name "LanmanWorkstation"
+
+    #Disable Work Folders Service
     Set-Service -StartupType Disabled "workfolderssvc"
     Stop-Service -Force -Name "workfolderssvc"
+
+    #Disable WLAN AutoConfig Service
     Set-Service -StartupType Disabled "WlanSvc"
     Stop-Service -Force -Name "WlanSvc"
+
+    #Disable Windows Time Service
     Set-Service -StartupType Disabled "W32Time"
     Stop-Service -Force -Name "W32Time"
+
+    #Disable Windows Push Notifications System Service
     Set-Service -StartupType Disabled "WpnService"
     Stop-Service -Force -Name "WpnService"
+
+    #Disable Windows Mobile Hotspot Service
     Set-Service -StartupType Disabled "icssvc"
     Stop-Service -Force -Name "icssvc"
+
+    #Disable Windows Mixed Reality OpenXR Service
     Set-Service -StartupType Disabled "MixedRealityOpenXRSvc"
     Stop-Service -Force -Name "MixedRealityOpenXRSvc"
+
+    #Disable Windows Media Player Network Sharing Service
     Set-Service -StartupType Disabled "WMPNetworkSvc"
     Stop-Service -Force -Name "WMPNetworkSvc"
+
+    #Disable Windows License Manager Service
+    #Might f*ck up Activation!
     Set-Service -StartupType Disabled "LicenseManager"
     Stop-Service -Force -Name "LicenseManager"
+
+    #Disable Windows Insider Service
     Set-Service -StartupType Disabled "wisvc"
     Stop-Service -Force -Name "wisvc"
+
+    #Disable Windows Event Collector Service
     Set-Service -StartupType Disabled "Wecsvc"
     Stop-Service -Force -Name "Wecsvc"
+
+    #Disable Windows Error Reporting Service
     Set-Service -StartupType Disabled "WerSvc"
     Stop-Service -Force -Name "WerSvc"
-    Set-Service -StartupType Disabled "mpssvc"
-    Stop-Service -Force -Name "mpssvc"
-    Set-Service -StartupType Disabled "Sense"
-    Stop-Service -Force -Name "Sense"
+
+    #Disable Windows Defender Firewall Service
+    #Wont work without NSudo
+    #Run 'disablewindowsdefender.ps1' to disable
+    #   Set-Service -StartupType Disabled "mpssvc"
+    #   Stop-Service -Force -Name "mpssvc"
+
+    #Disable Windows Defender Advanced Threat Protection Service
+    #Wont work without NSudo
+    #Run 'disablewindowsdefender.ps1' to disable
+    #   Set-Service -StartupType Disabled "Sense"
+    #   Stop-Service -Force -Name "Sense"
+
+    #Disable Windows Camera Frame Server Service
     Set-Service -StartupType Disabled "FrameServer"
     Stop-Service -Force -Name "FrameServer"
+
+    #Disable Windows Biometric Service
     Set-Service -StartupType Disabled "WbioSrvc"
     Stop-Service -Force -Name "WbioSrvc"
+
+    #Disable Windows Backup Service
     Set-Service -StartupType Disabled "SDRSVC"
     Stop-Service -Force -Name "SDRSVC"
+
+    #Disable Wi-Fi Direct Services Connection Manager Service
+    Set-Service -StartupType Disabled "WFDSConMgrSvc"
+    Stop-Service -Force -Name "WFDSConMgrSvc"
+
+    #Disable WebClient Service
     Set-Service -StartupType Disabled "WebClient"
     Stop-Service -Force -Name "WebClient"
+
+    #Disable Web Account Manager Service
     Set-Service -StartupType Disabled "TokenBroker"
     Stop-Service -Force -Name "TokenBroker"
+
+    #Disable WalletService
     Set-Service -StartupType Disabled "WalletService"
     Stop-Service -Force -Name "WalletService"
+
+    #Disable Volume Shadow Copy Service
     Set-Service -StartupType Disabled "VSS"
     Stop-Service -Force -Name "VSS"
+
+    #Disable Virtual Disk Service
     Set-Service -StartupType Disabled "vds"
     Stop-Service -Force -Name "vds"
+
+    #Disable Touch Keyboard and Handwriting Panel Service
+    #You can't stop this service, but for some reason you can disable it?!?!
     Set-Service -StartupType Disabled "TabletInputService"
-    Stop-Service -Force -Name "TabletInputService"
+    #   Stop-Service -Force -Name "TabletInputService"
+
+    #Disable Storage Service
     Set-Service -StartupType Disabled "StorSvc"
     Stop-Service -Force -Name "StorSvc"
+
+    #Disable Spatial Data Service
     Set-Service -StartupType Disabled "SharedRealitySvc"
     Stop-Service -Force -Name "SharedRealitySvc"
+
+    #Disable Software Protection Service
     Set-Service -StartupType Disabled "sppsvc"
     Stop-Service -Force -Name "sppsvc"
+
+    #Disable Smart Card Removal Policy Service
     Set-Service -StartupType Disabled "SCPolicySvc"
     Stop-Service -Force -Name "SCPolicySvc"
+
+    #Disable Smart Card Device Enumeration Service
     Set-Service -StartupType Disabled "ScDeviceEnum"
     Stop-Service -Force -Name "ScDeviceEnum"
+
+    #Disable Smart Card Service
     Set-Service -StartupType Disabled "SCardSvr"
     Stop-Service -Force -Name "SCardSvr"
+
+    #Disable Server Service
     Set-Service -StartupType Disabled "LanmanServer"
     Stop-Service -Force -Name "LanmanServer"
+
+    #Disable Sensor Service
     Set-Service -StartupType Disabled "SensorService"
     Stop-Service -Force -Name "SensorService"
+
+    #Disable Sensor Monitoring Service
     Set-Service -StartupType Disabled "SensrSvc"
     Stop-Service -Force -Name "SensrSvc"
+
+    #Disable Sensor Data Service
     Set-Service -StartupType Disabled "SensorDataService"
     Stop-Service -Force -Name "SensorDataService"
+
+    #Disable Security Center Service
     Set-Service -StartupType Disabled "wscsvc"
     Stop-Service -Force -Name "wscsvc"
+
+    #Disable Secondary Logon Service
     Set-Service -StartupType Disabled "seclogon"
     Stop-Service -Force -Name "seclogon"
+
+    #Disable Retail Demo Service
     Set-Service -StartupType Disabled "RetailDemo"
     Stop-Service -Force -Name "RetailDemo"
+
+    #Disable Remote Registry Service
     Set-Service -StartupType Disabled "RemoteRegistry"
     Stop-Service -Force -Name "RemoteRegistry"
+
+    #Disable Remote Access Connection Manager Service
     Set-Service -StartupType Disabled "RasMan"
     Stop-Service -Force -Name "RasMan"
+
+    #Disable Recommended Troubleshooting Service 
     Set-Service -StartupType Disabled "TroubleshootingSvc"
     Stop-Service -Force -Name "TroubleshootingSvc"
+
+    #Disable Remote Desktop Configuration Service
     Set-Service -StartupType Disabled "SessionEnv"
     Stop-Service -Force -Name "SessionEnv"
+
+    #Disable Remote Desktop Service
     Set-Service -StartupType Disabled "TermService"
     Stop-Service -Force -Name "TermService"
+
+    #Disable Radio Management Service
     Set-Service -StartupType Disabled "RmSvc"
     Stop-Service -Force -Name "RmSvc"
+
+    #Disable Quality Windows Audio Video Experience Service
     Set-Service -StartupType Disabled "QWAVE"
     Stop-Service -Force -Name "QWAVE"
     
+    #Disable Program Compatibility Assistant Service
     #Comment this out if you want to use program compatibility settings!
     Set-Service -StartupType Disabled "PcaSvc"
     Stop-Service -Force -Name "PcaSvc"
 
+    #Disable Problem Reports Control Panel Support Service
     Set-Service -StartupType Disabled "wercplsupport"
     Stop-Service -Force -Name "wercplsupport"
+
+    #Disable Printer Extensions and Notifications Service
     Set-Service -StartupType Disabled "PrintNotify"
     Stop-Service -Force -Name "PrintNotify"
+
+    #Disable Print Spooler Service
     Set-Service -StartupType Disabled "Spooler"
     Stop-Service -Force -Name "Spooler"
+
+    #Disable Phone Service 
     Set-Service -StartupType Disabled "PhoneSvc"
     Stop-Service -Force -Name "PhoneSvc"
+
+    #Disable Parental Controls Service
     Set-Service -StartupType Disabled "WpcMonSvc"
     Stop-Service -Force -Name "WpcMonSvc"
+
+    #Disable Payments and NFC/SE Manager Service
     Set-Service -StartupType Disabled "SEMgrSvc"
     Stop-Service -Force -Name "SEMgrSvc"
+
+    #Disable Optimize drives Service
     Set-Service -StartupType Disabled "defragsvc"
     Stop-Service -Force -Name "defragsvc"
+
+    #Disable Offline Files Service
     Set-Service -StartupType Disabled "CscService"
     Stop-Service -Force -Name "CscService"
+
+    #Disable Netlogon Service
     Set-Service -StartupType Disabled "Netlogon"
     Stop-Service -Force -Name "Netlogon"
+
+    #Disable Microsoft Windows SMS Router Service
     Set-Service -StartupType Disabled "SmsRouter"
     Stop-Service -Force -Name "SmsRouter"
+
+    #Disable Microsoft Store Install Service
     Set-Service -StartupType Disabled "InstallService"
     Stop-Service -Force -Name "InstallService"
+
+    #Disable Microsoft Storage Spaces SMP Service
     Set-Service -StartupType Disabled "smphost"
     Stop-Service -Force -Name "smphost"
+
+    #Disable Microsoft Software Shadow Copy Provider Service
     Set-Service -StartupType Disabled "swprv"
     Stop-Service -Force -Name "swprv"
+
+    #Disable Microsoft Passport Container Service
     Set-Service -StartupType Disabled "NgcCtnrSvc"
     Stop-Service -Force -Name "NgcCtnrSvc"
+
+    #Disable Microsoft Passport Service
     Set-Service -StartupType Disabled "NgcSvc"
     Stop-Service -Force -Name "NgcSvc"
+
+    #Disable Microsoft Keyboard Filter Service
     Set-Service -StartupType Disabled "MsKeyboardFilter"
     Stop-Service -Force -Name "MsKeyboardFilter"
+
+    #Disable Microsoft iSCSI Initiator Service
     Set-Service -StartupType Disabled "MSiSCSI"
     Stop-Service -Force -Name "MSiSCSI"
+
+    #Disable Microsoft Edge Update Service
     Set-Service -StartupType Disabled "edgeupdatem"
     Stop-Service -Force -Name "edgeupdatem"
+
+    #Disable Microsoft Edge Update Service
     Set-Service -StartupType Disabled "edgeupdate"
     Stop-Service -Force -Name "edgeupdate"
+
+    #Disable Microsoft Edge Elevation Service 
     Set-Service -StartupType Disabled "MicrosoftEdgeElevationService"
     Stop-Service -Force -Name "MicrosoftEdgeElevationService"
+
+    #Disable Microsoft App-V Client Service
     Set-Service -StartupType Disabled "AppVClient"
     Stop-Service -Force -Name "AppVClient"
+
+    #Disable Microsoft Account Sign-in Assistant Service
     Set-Service -StartupType Disabled "wlidsvc"
     Stop-Service -Force -Name "wlidsvc"
+
+    #Disable Microsoft (R) Diagnostics Hub Standard Collector Service
     Set-Service -StartupType Disabled "diagnosticshub.standardcollector.service"
     Stop-Service -Force -Name "diagnosticshub.standardcollector.service"
+
+    #Disable IP Helper Service
     Set-Service -StartupType Disabled "iphlpsvc"
     Stop-Service -Force -Name "iphlpsvc"
+
+    #Disable Geolocation Service
     Set-Service -StartupType Disabled "lfsvc"
     Stop-Service -Force -Name "lfsvc"
+
+    #Disable File History Service
     Set-Service -StartupType Disabled "fhsvc"
     Stop-Service -Force -Name "fhsvc"
+
+    #Disable Fax Service
     Set-Service -StartupType Disabled "Fax"
     Stop-Service -Force -Name "Fax"
+
+    #Disable Embedded Mode Service
     Set-Service -StartupType Disabled "embeddedmode"
     Stop-Service -Force -Name "embeddedmode"
+
+    #Disable Downloaded Maps Manager Service
     Set-Service -StartupType Disabled "MapsBroker"
     Stop-Service -Force -Name "MapsBroker"
+
+    #Disable Distributed Link Tracking Client Service
     Set-Service -StartupType Disabled "TrkWks"
     Stop-Service -Force -Name "TrkWks"
+
+    #Disable Display Policy Service
+    #Can f*ck something up with laptops
+    Set-Service -StartupType Disabled "DispBrokerDesktopSvc"
+    Stop-Service -Force -Name "DispBrokerDesktopSvc"
+
+    #Disable Display Enhancement Service
+    #Can f*ck something up with laptops
+    Set-Service -StartupType Disabled "DisplayEnhancementService"
+    Stop-Service -Force -Name "DisplayEnhancementService"
+
+    #Disable Diagnostic System Host Service
     Set-Service -StartupType Disabled "WdiSystemHost"
     Stop-Service -Force -Name "WdiSystemHost"
+
+    #Disable Diagnostic Service Host Service
     Set-Service -StartupType Disabled "WdiServiceHost"
     Stop-Service -Force -Name "WdiServiceHost"
+
+    #Disable Diagnostic Policy Service 
     Set-Service -StartupType Disabled "DPS"
     Stop-Service -Force -Name "DPS"
+
+    #Disable Diagnostic Execution Service
     Set-Service -StartupType Disabled "diagsvc"
     Stop-Service -Force -Name "diagsvc"
+
+    #Disable Delivery Optimization Service
     Set-Service -StartupType Disabled "DoSvc"
     Stop-Service -Force -Name "DoSvc"
+
+    #Disable Data Usage Service
     Set-Service -StartupType Disabled "DusmSvc"
     Stop-Service -Force -Name "DusmSvc"
+
+    #Disable Data Sharing Service
     Set-Service -StartupType Disabled "DsSvc"
     Stop-Service -Force -Name "DsSvc"
+
+    #Disable Cryptographic Service
     Set-Service -StartupType Disabled "CryptSvc"
     Stop-Service -Force -Name "CryptSvc"
+
+    #Disable Credential Manager Service
     Set-Service -StartupType Disabled "VaultSvc"
     Stop-Service -Force -Name "VaultSvc"
+     
+    #Disable Connected User Experiences and Telemetry Service
+    Set-Service -StartupType Disabled "DiagTrack"
+    Stop-Service -Force -Name "DiagTrack"
+
+    #Disable Cellular Time Service
     Set-Service -StartupType Disabled "autotimesvc"
     Stop-Service -Force -Name "autotimesvc"
+
+    #Disable Bluetooth Support Service
     Set-Service -StartupType Disabled "bthserv"
     Stop-Service -Force -Name "bthserv"
+
+    #Disable Bluetooth Audio Gateway Service
     Set-Service -StartupType Disabled "BTAGService"
     Stop-Service -Force -Name "BTAGService"
+
+    #Disable BitLocker Drive Encryption Service
     Set-Service -StartupType Disabled "BDESVC"
     Stop-Service -Force -Name "BDESVC"
+
+    #Disable Auto Time Zone Updater Service
     Set-Service -StartupType Disabled "tzautoupdate"
     Stop-Service -Force -Name "tzautoupdate"
 
@@ -556,14 +761,92 @@ $essentialtweaks.Add_Click({
     writeHost "Now uninstalling all Metro applications"
     Get-AppxPackage -AllUsers | Remove-AppxPackage
     Get-AppxPackage | Remove-AppxPackage
-    writeHost "Metro applications should be gone now"
-
-    #Disable Windows Defender
-    #
+    write-Host "Metro applications should be gone now"
     
+    write-Host "More registry tweaking..."
+
+    #2020-DeCrapify.ps1#########################################################################################################################################
+    
+        #Show File Extensions
+        Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name "HideFileExt" -Type DWord -Value 0
+        write-Host "Now, you will see file extensions"
+
+        #Explorer launches to My Computer
+        Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name "LaunchTo" -Type DWord -Value 1
+
+        #Disable Sticky Keys
+        Set-ItemProperty -Path "HKCU:\Control Panel\Accessibility\StickyKeys" -Name "Flags" -Type String -Value "506"
+        write-Host "Sticky Keys should be disabled now"
+
+        #Disable Lock Screen!
+        If (!(Test-Path "HKLM:\Software\Policies\Microsoft\Windows\Personalization")) {
+ 	        New-Item -Path "HKLM:\Software\Policies\Microsoft\Windows\Personalization" | Out-Null
+        }
+        Set-ItemProperty -Path "HKLM:\Software\Policies\Microsoft\Windows\Personalization" -Name "NoLockScreen" -Type DWord -Value 1
+        write-Host "Lock Screen has been disabled"
+
+        #Disable UAC
+        Set-ItemProperty -Path "HKLM:\Software\Microsoft\Windows\CurrentVersion\Policies\System" -Name "ConsentPromptBehaviorAdmin" -Type DWord -Value 0
+        Set-ItemProperty -Path "HKLM:\Software\Microsoft\Windows\CurrentVersion\Policies\System" -Name "PromptOnSecureDesktop" -Type DWord -Value 0
+        write-Host "UAC has been disabled"
+        
+        #Disable Advertising ID
+        If (!(Test-Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\AdvertisingInfo")) {
+	        New-Item -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\AdvertisingInfo" | Out-Null
+        }
+        Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\AdvertisingInfo" -Name "Enabled" -Type DWord -Value 0
+        write-Host "Advertising ID has been disabled"
+
+        #Disable SmartScreen
+        Set-ItemProperty -Path "HKLM:\Software\Microsoft\Windows\CurrentVersion\Explorer" -Name "SmartScreenEnabled" -Type String -Value "Off"
+        Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\AppHost" -Name "EnableWebContentEvaluation" -Type DWord -Value 0
+        write-Host "SmartScreen has been disabled"
+
+        #Disable WiFi Sense
+        write-Host "Trying to disabled Wi-Fi Sense..."
+        If (!(Test-Path "HKLM:\Software\Microsoft\PolicyManager\default\WiFi\AllowWiFiHotSpotReporting")) {
+	    New-Item -Path "HKLM:\Software\Microsoft\PolicyManager\default\WiFi\AllowWiFiHotSpotReporting" -Force | Out-Null
+        }
+        Set-ItemProperty -Path "HKLM:\Software\Microsoft\PolicyManager\default\WiFi\AllowWiFiHotSpotReporting" -Name "Value" -Type DWord -Value 0
+        Set-ItemProperty -Path "HKLM:\Software\Microsoft\PolicyManager\default\WiFi\AllowAutoConnectToWiFiSenseHotspots" -Name "Value" -Type DWord -Value 0
+        write-Host "Wi-Fi Sense has been disabled"
+
+        #Disable Firewall
+        write-Host "Disabled Windows Defender"
+        Set-NetFirewallProfile -Profile * -Enabled False
+
+        #Disable Windows Defender
+        write-Host "Disabled Windows Defender"
+        Set-ItemProperty -Path "HKLM:\Software\Policies\Microsoft\Windows Defender" -Name "DisableAntiSpyware" -Type DWord -Value 1
+
+        #Disable Remote Desktop
+        write-Host "Disabled Remote Desktop"
+        Set-ItemProperty -Path "HKLM:\System\CurrentControlSet\Control\Terminal Server" -Name "fDenyTSConnections" -Type DWord -Value 1
+        Set-ItemProperty -Path "HKLM:\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp" -Name "UserAuthentication" -Type DWord -Value 1
+
+        #Disable AutoPlay
+        write-Host "Disabled AutoPlay"
+        Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\AutoplayHandlers" -Name "DisableAutoplay" -Type DWord -Value 1
+
+        #Taskbar Tweaks
+            #Search Icon - Disable
+            write-Host "Disabled Search on taskbar"
+            Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Search" -Name "SearchboxTaskbarMode" -Type DWord -Value 0
+
+            #Task View Icon - Disable
+            write-Host "Disabled Task View button on taskbar"
+            Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name "ShowTaskViewButton" -Type DWord -Value 0
+
+            #Taskbar Show Small Icons - Enable
+            #   Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name "TaskbarSmallIcons" -Type DWord -Value 1
+
+        #2020-DeCrapify.ps1#########################################################################################################################################
+
+        #Disable Transparency Effects
+        Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize" -Name "EnableTransparency" -Type DWord -Value 0
+        write-Host "Transparency Effects has been turned off"
 
     Write-Host "Tweaks are done!"
-
 })
 
 $cortana.Add_Click({
@@ -670,10 +953,24 @@ $onedrive.Add_Click({
     }
     Remove-Item -Path "HKCR:\CLSID\{018D5C66-4533-4307-9B53-224DE2ED1FE6}" -Recurse -ErrorAction SilentlyContinue
     Remove-Item -Path "HKCR:\Wow6432Node\CLSID\{018D5C66-4533-4307-9B53-224DE2ED1FE6}" -Recurse -ErrorAction SilentlyContinue
+
+    #2020-DeCrapify.ps1#######################################
+        foreach ($item in (Get-ChildItem "$env:WinDir\WinSxS\*onedrive*")) {
+        Takeown-Folder $item.FullName
+        Remove-Item -Recurse -Force $item.FullName
+        }
+        Remove-Item -Recurse -Force -ErrorAction SilentlyContinue "$env:localappdata\Microsoft\OneDrive"
+        Remove-Item -Recurse -Force -ErrorAction SilentlyContinue "$env:programdata\Microsoft OneDrive"
+        Remove-Item -Recurse -Force -ErrorAction SilentlyContinue "$env:systemdrive\OneDriveTemp"
+        If ((Get-ChildItem "$env:userprofile\OneDrive" -Recurse | Measure-Object).Count -eq 0) {
+        Remove-Item -Recurse -Force -ErrorAction SilentlyContinue "$env:userprofile\OneDrive"
+        }
+    #2020-DeCrapify.ps1#######################################
     Write-Host "Disabled OneDrive"
 })
 
 $darkmode.Add_Click({
+    #Dark Mode
     Write-Host "Enabling Dark Mode"
     Set-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize -Name AppsUseLightTheme -Value 0
     reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes" /f
@@ -691,6 +988,7 @@ $darkmode.Add_Click({
 })
 
 $lightmode.Add_Click({
+    #Light Mode
     Write-Host "Switching Back to Light Mode"
     Remove-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize -Name AppsUseLightTheme
     reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes" /f
@@ -718,9 +1016,7 @@ $DisableNumLock.Add_Click({
 })
 
 $disablewindowsupdate.Add_Click({
-    #WaaSMedicSvc
-    #UsoSvc
-    #wisvc
+    #Disable Windows Update Services
     Stop-Service -Force -Name "wuauserv"
     Stop-Service -Force -Name "UsoSvc"
     Stop-Service -Force -Name "wisvc"
@@ -729,21 +1025,24 @@ $disablewindowsupdate.Add_Click({
     Set-Service "UsoSvc" -StartupType Disabled
     Set-Service "wisvc" -StartupType Disabled
     
+    
+    #Disable Windows Update Scheduled Tasks
     Disable-ScheduledTask -TaskName "\Microsoft\Windows\WindowsUpdate\Scheduled Start" | Out-Null
     Disable-ScheduledTask -TaskName "\Microsoft\Windows\WaaSMedic\PerformRemediation" | Out-Null
-
     Disable-ScheduledTask -TaskName "\Microsoft\Windows\UpdateOrchestrator\Report policies" | Out-Null
     Disable-ScheduledTask -TaskName "\Microsoft\Windows\UpdateOrchestrator\Schedule Scan" | Out-Null
     Disable-ScheduledTask -TaskName "\Microsoft\Windows\UpdateOrchestrator\Schedule Scan Static Task" | Out-Null
     Disable-ScheduledTask -TaskName "\Microsoft\Windows\UpdateOrchestrator\UpdateModelTask" | Out-Null
     Disable-ScheduledTask -TaskName "\Microsoft\Windows\UpdateOrchestrator\USO_UxBroker" | Out-Null
 
+    #Disable automatic Windows Update restart
+    Set-ItemProperty -Path "HKLM:\Software\Microsoft\WindowsUpdate\UX\Settings" -Name "UxOption" -Type DWord -Value 1
+
     write-Host "Windows Update has been disabled!"
 })
 
 $enablewindowsupdate.Add_Click({
-    #WaaSMedicSvc
-    #wisvc
+    #Enable Windows Update Services
     Set-Service "wuauserv" -StartupType Manual
     Set-Service "wisvc" -StartupType Manual
     Set-Service "WaaSMedicSvc" -StartupType Manual
@@ -752,10 +1051,28 @@ $enablewindowsupdate.Add_Click({
     Start-Service -Name "UsoSvc"
     Start-Service -Name "wisvc"
 
+    #Enable Windows Update Scheduled Tasks
     Enable-ScheduledTask -TaskName "\Microsoft\Windows\WindowsUpdate\Scheduled Start" | Out-Null
     Enable-ScheduledTask -TaskName "\Microsoft\Windows\WaaSMedic\PerformRemediation" | Out-Null
+    Enable-ScheduledTask -TaskName "\Microsoft\Windows\UpdateOrchestrator\Report policies" | Out-Null
+    Enable-ScheduledTask -TaskName "\Microsoft\Windows\UpdateOrchestrator\Schedule Scan" | Out-Null
+    Enable-ScheduledTask -TaskName "\Microsoft\Windows\UpdateOrchestrator\Schedule Scan Static Task" | Out-Null
+    Enable-ScheduledTask -TaskName "\Microsoft\Windows\UpdateOrchestrator\UpdateModelTask" | Out-Null
+    Enable-ScheduledTask -TaskName "\Microsoft\Windows\UpdateOrchestrator\USO_UxBroker" | Out-Null
+
+    #Enable automatic Windows Update restart
+    Set-ItemProperty -Path "HKLM:\Software\Microsoft\WindowsUpdate\UX\Settings" -Name "UxOption" -Type DWord -Value 0
 
     write-Host "Windows Update has been enabled!"
+})
+
+$smalltaskbaricons.Add_Click({
+
+    #Use Small Taskbar Icons    
+    Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name "TaskbarSmallIcons" -Type DWord -Value 1
+    Stop-Process -Name "explorer" -ErrorAction SilentlyContinue
+    write-Host "You should have small taskbar icons now!"
+
 })
 
 [void]$Form.ShowDialog()
