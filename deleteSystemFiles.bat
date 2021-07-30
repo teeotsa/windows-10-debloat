@@ -143,8 +143,9 @@ rmdir /s "Windows Defender Advanced Threat Protection" /q
 rmdir /s "Windows Mail" /q
 rmdir /s "Windows Media Player" /q  
 
-cd \Program Files\WindowsApps
-del /f/q/s *
+::This will f*ck up Windows Explorer
+::cd \Program Files\WindowsApps
+::del /f/q/s *
 
 ::Delete Windows Update Folder
 cd %WINDIR%
