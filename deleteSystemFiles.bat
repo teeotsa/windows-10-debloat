@@ -32,8 +32,10 @@ echo If you get errors like 'Access denied' then just use NSudo!
 ::Goto System32 Folder!
 cd %WINDIR%\System32
 
-taskkill /f /im backgroundTaskHost.exe /t
-del /q backgroundTaskHost.exe
+::This will f*ck up Windows Explorer
+::taskkill /f /im backgroundTaskHost.exe /t
+::del /q backgroundTaskHost.exe
+
 del /q AzureSettingSyncProvider.dll
 taskkill /f /im SearchIndexer.exe /t
 del /q SearchIndexer.exe
@@ -120,8 +122,10 @@ del /q fingerprintcredential.dll
 taskkill /f /im ctfmon.exe /t
 del /q ctfmon.exe
 del /q AzureSettingSyncProvider.dll
-taskkill /f /im backgroundTaskHost.exe /t
-del /q backgroundTaskHost.exe
+
+::This will f*ck up Windows Explorer
+::taskkill /f /im backgroundTaskHost.exe /t
+::del /q backgroundTaskHost.exe
 
 ::Remove Edge
 cd \Program Files (x86)\Microsoft
