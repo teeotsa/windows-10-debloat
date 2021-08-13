@@ -10,6 +10,8 @@ If (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]:
 	Exit
 }
 
+Clear-Host
+
 $Form                            = New-Object system.Windows.Forms.Form
 $Form.ClientSize                 = New-Object System.Drawing.Point(1050,700)
 $Form.text                       = "Windows 10 Debloater"
@@ -20,11 +22,6 @@ $Form.AutoScaleDimensions        = '192, 192'
 $Form.AutoSize                   = $False
 $Form.ClientSize                 = '575, 400'
 $Form.FormBorderStyle            = 'Sizable'
-
-#$Panel1                          = New-Object system.Windows.Forms.Panel
-#$Panel1.height                   = 639
-#$Panel1.width                    = 219
-#$Panel1.location                 = New-Object System.Drawing.Point(600,54)
 
 $Panel2                          = New-Object system.Windows.Forms.Panel
 $Panel2.height                   = 386
@@ -145,7 +142,7 @@ $essentialtweaks.Add_Click({
     #Enable-ComputerRestore -Drive "C:\"
     #Checkpoint-Computer -Description "RestorePoint1" -RestorePointType "MODIFY_SETTINGS"
 
-    Write-Host "Running O&O Shutup with Recommended Settings"
+    Write-Host "Running O&O Shutup with Not Recommended Settings"
     Import-Module BitsTransfer
     Start-BitsTransfer -Source "https://raw.githubusercontent.com/teeotsa/win10script/master/ooshutup10.cfg" -Destination ooshutup10.cfg
     Start-BitsTransfer -Source "https://dl5.oo-software.com/files/ooshutup10/OOSU10.exe" -Destination OOSU10.exe
@@ -296,397 +293,118 @@ $essentialtweaks.Add_Click({
     #   Set-Service -StartupType Disabled ""
     #   Stop-Service -Force -Name ""
 
-    #All XBox Services
-    Stop-Service -Force -Name "XboxNetApiSvc"
-    Set-Service -StartupType Disabled "XboxNetApiSvc"
-    Set-Service -StartupType Disabled "XblGameSave"
-    Stop-Service -Force -Name "XblGameSave"
-    Set-Service -StartupType Disabled "XblAuthManager"
-    Stop-Service -Force -Name "XblAuthManager"
-    Set-Service -StartupType Disabled "XboxGipSvc"
-    Stop-Service -Force -Name "XboxGipSvc"
+    $s = {
+
+    "XboxNetApiSvc"
+    "XblGameSave"
+    "XblAuthManager"
+    "XboxGipSvc"
+    "LanmanWorkstation"
+    "workfolderssvc"
+    "WlanSvc"
+    "W32Time"
+    "WpnService"
+    "icssvc"
+    "MixedRealityOpenXRSvc"
+    "WMPNetworkSvc"
+    "LicenseManager"
+    "wisvc"
+    "Wecsvc"
+    "WerSvc"
+    "FrameServer"
+    "WbioSrvc"
+    "SDRSVC"
+    "WFDSConMgrSvc"
+    "WebClient"
+    "TokenBroker"
+    "WalletService"
+    "VSS"
+    "vds"
+    "TabletInputService"
+    "StorSvc"
+    "SharedRealitySvc"
+    "sppsvc"
+    "SCPolicySvc"
+    "ScDeviceEnum"
+    "SCardSvr"
+    "LanmanServer"
+    "SensorService"
+    "SensrSvc"
+    "SensorDataService"
+    "wscsvc"
+    "seclogon"
+    "RetailDemo"
+    "RemoteRegistry"
+    "RasMan"
+    "TroubleshootingSvc"
+    "SessionEnv"
+    "TermService"
+    "RmSvc"
+    "QWAVE"
+    "PcaSvc"
+    "wercplsupport"
+    "PrintNotify"
+    "Spooler"
+    "PhoneSvc"
+    "WpcMonSvc"
+    "SEMgrSvc"
+    "defragsvc"
+    "CscService"
+    "Netlogon"
+    "SmsRouter"
+    "InstallService"
+    "smphost"
+    "swprv"
+    "NgcCtnrSvc"
+    "NgcSvc"
+    "MsKeyboardFilter"
+    "MSiSCSI"
+    "edgeupdatem"
+    "edgeupdate"
+    "MicrosoftEdgeElevationService"
+    "AppVClient"
+    "wlidsvc"
+    "diagnosticshub.standardcollector.service"
+    "iphlpsvc"
+    "lfsvc"
+    "fhsvc"
+    "Fax"
+    "embeddedmode"
+    "MapsBroker"
+    "TrkWks"
+    "DispBrokerDesktopSvc"
+    "DisplayEnhancementService"
+    "WdiSystemHost"
+    "WdiServiceHost"
+    "DPS"
+    "diagsvc"
+    "DoSvc"
+    "DusmSvc"
+    "DsSvc"
+    "CryptSvc"
+    "VaultSvc"
+    "DiagTrack"
+    "autotimesvc"
+    "bthserv"
+    "BTAGService"
+    "BDESVC"
+    "tzautoupdate"
+    "WinHttpAutoProxySvc"
+    "lmhosts"
+    "IKEEXT"
+    }
+
+    foreach ($s in $s) {
 
-    #Other Services 
-    #LanmanWorkstation
-    #WlanSvc
-    #W32Time
+    Get-Service -Name $s -ErrorAction SilentlyContinue | Set-Service -StartupType Disabled
 
-    #Disable Workstation Service
-    Set-Service -StartupType Disabled "LanmanWorkstation"
-    Stop-Service -Force -Name "LanmanWorkstation"
+        $running = Get-Service -Name $service -ErrorAction SilentlyContinue | Where-Object {$_.Status -eq 'Running'}
+        if ($running) { 
+            Stop-Service -Name $service
+        }
 
-    #Disable Work Folders Service
-    Set-Service -StartupType Disabled "workfolderssvc"
-    Stop-Service -Force -Name "workfolderssvc"
+    }
 
-    #Disable WLAN AutoConfig Service
-    Set-Service -StartupType Disabled "WlanSvc"
-    Stop-Service -Force -Name "WlanSvc"
-
-    #Disable Windows Time Service
-    Set-Service -StartupType Disabled "W32Time"
-    Stop-Service -Force -Name "W32Time"
-
-    #Disable Windows Push Notifications System Service
-    Set-Service -StartupType Disabled "WpnService"
-    Stop-Service -Force -Name "WpnService"
-
-    #Disable Windows Mobile Hotspot Service
-    Set-Service -StartupType Disabled "icssvc"
-    Stop-Service -Force -Name "icssvc"
-
-    #Disable Windows Mixed Reality OpenXR Service
-    Set-Service -StartupType Disabled "MixedRealityOpenXRSvc"
-    Stop-Service -Force -Name "MixedRealityOpenXRSvc"
-
-    #Disable Windows Media Player Network Sharing Service
-    Set-Service -StartupType Disabled "WMPNetworkSvc"
-    Stop-Service -Force -Name "WMPNetworkSvc"
-
-    #Disable Windows License Manager Service
-    #Might f*ck up Activation!
-    Set-Service -StartupType Disabled "LicenseManager"
-    Stop-Service -Force -Name "LicenseManager"
-
-    #Disable Windows Insider Service
-    Set-Service -StartupType Disabled "wisvc"
-    Stop-Service -Force -Name "wisvc"
-
-    #Disable Windows Event Collector Service
-    Set-Service -StartupType Disabled "Wecsvc"
-    Stop-Service -Force -Name "Wecsvc"
-
-    #Disable Windows Error Reporting Service
-    Set-Service -StartupType Disabled "WerSvc"
-    Stop-Service -Force -Name "WerSvc"
-
-    #Disable Windows Defender Firewall Service
-    #Wont work without NSudo
-    #Run 'disablewindowsdefender.ps1' to disable
-    #   Set-Service -StartupType Disabled "mpssvc"
-    #   Stop-Service -Force -Name "mpssvc"
-
-    #Disable Windows Defender Advanced Threat Protection Service
-    #Wont work without NSudo
-    #Run 'disablewindowsdefender.ps1' to disable
-    #   Set-Service -StartupType Disabled "Sense"
-    #   Stop-Service -Force -Name "Sense"
-
-    #Disable Windows Camera Frame Server Service
-    Set-Service -StartupType Disabled "FrameServer"
-    Stop-Service -Force -Name "FrameServer"
-
-    #Disable Windows Biometric Service
-    Set-Service -StartupType Disabled "WbioSrvc"
-    Stop-Service -Force -Name "WbioSrvc"
-
-    #Disable Windows Backup Service
-    Set-Service -StartupType Disabled "SDRSVC"
-    Stop-Service -Force -Name "SDRSVC"
-
-    #Disable Wi-Fi Direct Services Connection Manager Service
-    Set-Service -StartupType Disabled "WFDSConMgrSvc"
-    Stop-Service -Force -Name "WFDSConMgrSvc"
-
-    #Disable WebClient Service
-    Set-Service -StartupType Disabled "WebClient"
-    Stop-Service -Force -Name "WebClient"
-
-    #Disable Web Account Manager Service
-    Set-Service -StartupType Disabled "TokenBroker"
-    Stop-Service -Force -Name "TokenBroker"
-
-    #Disable WalletService
-    Set-Service -StartupType Disabled "WalletService"
-    Stop-Service -Force -Name "WalletService"
-
-    #Disable Volume Shadow Copy Service
-    Set-Service -StartupType Disabled "VSS"
-    Stop-Service -Force -Name "VSS"
-
-    #Disable Virtual Disk Service
-    Set-Service -StartupType Disabled "vds"
-    Stop-Service -Force -Name "vds"
-
-    #Disable Touch Keyboard and Handwriting Panel Service
-    #You can't stop this service, but for some reason you can disable it?!?!
-    Set-Service -StartupType Disabled "TabletInputService"
-    #   Stop-Service -Force -Name "TabletInputService"
-
-    #Disable Storage Service
-    Set-Service -StartupType Disabled "StorSvc"
-    Stop-Service -Force -Name "StorSvc"
-
-    #Disable Spatial Data Service
-    Set-Service -StartupType Disabled "SharedRealitySvc"
-    Stop-Service -Force -Name "SharedRealitySvc"
-
-    #Disable Software Protection Service
-    Set-Service -StartupType Disabled "sppsvc"
-    Stop-Service -Force -Name "sppsvc"
-
-    #Disable Smart Card Removal Policy Service
-    Set-Service -StartupType Disabled "SCPolicySvc"
-    Stop-Service -Force -Name "SCPolicySvc"
-
-    #Disable Smart Card Device Enumeration Service
-    Set-Service -StartupType Disabled "ScDeviceEnum"
-    Stop-Service -Force -Name "ScDeviceEnum"
-
-    #Disable Smart Card Service
-    Set-Service -StartupType Disabled "SCardSvr"
-    Stop-Service -Force -Name "SCardSvr"
-
-    #Disable Server Service
-    Set-Service -StartupType Disabled "LanmanServer"
-    Stop-Service -Force -Name "LanmanServer"
-
-    #Disable Sensor Service
-    Set-Service -StartupType Disabled "SensorService"
-    Stop-Service -Force -Name "SensorService"
-
-    #Disable Sensor Monitoring Service
-    Set-Service -StartupType Disabled "SensrSvc"
-    Stop-Service -Force -Name "SensrSvc"
-
-    #Disable Sensor Data Service
-    Set-Service -StartupType Disabled "SensorDataService"
-    Stop-Service -Force -Name "SensorDataService"
-
-    #Disable Security Center Service
-    Set-Service -StartupType Disabled "wscsvc"
-    Stop-Service -Force -Name "wscsvc"
-
-    #Disable Secondary Logon Service
-    Set-Service -StartupType Disabled "seclogon"
-    Stop-Service -Force -Name "seclogon"
-
-    #Disable Retail Demo Service
-    Set-Service -StartupType Disabled "RetailDemo"
-    Stop-Service -Force -Name "RetailDemo"
-
-    #Disable Remote Registry Service
-    Set-Service -StartupType Disabled "RemoteRegistry"
-    Stop-Service -Force -Name "RemoteRegistry"
-
-    #Disable Remote Access Connection Manager Service
-    Set-Service -StartupType Disabled "RasMan"
-    Stop-Service -Force -Name "RasMan"
-
-    #Disable Recommended Troubleshooting Service 
-    Set-Service -StartupType Disabled "TroubleshootingSvc"
-    Stop-Service -Force -Name "TroubleshootingSvc"
-
-    #Disable Remote Desktop Configuration Service
-    Set-Service -StartupType Disabled "SessionEnv"
-    Stop-Service -Force -Name "SessionEnv"
-
-    #Disable Remote Desktop Service
-    Set-Service -StartupType Disabled "TermService"
-    Stop-Service -Force -Name "TermService"
-
-    #Disable Radio Management Service
-    Set-Service -StartupType Disabled "RmSvc"
-    Stop-Service -Force -Name "RmSvc"
-
-    #Disable Quality Windows Audio Video Experience Service
-    Set-Service -StartupType Disabled "QWAVE"
-    Stop-Service -Force -Name "QWAVE"
-    
-    #Disable Program Compatibility Assistant Service
-    #Comment this out if you want to use program compatibility settings!
-    Set-Service -StartupType Disabled "PcaSvc"
-    Stop-Service -Force -Name "PcaSvc"
-
-    #Disable Problem Reports Control Panel Support Service
-    Set-Service -StartupType Disabled "wercplsupport"
-    Stop-Service -Force -Name "wercplsupport"
-
-    #Disable Printer Extensions and Notifications Service
-    Set-Service -StartupType Disabled "PrintNotify"
-    Stop-Service -Force -Name "PrintNotify"
-
-    #Disable Print Spooler Service
-    Set-Service -StartupType Disabled "Spooler"
-    Stop-Service -Force -Name "Spooler"
-
-    #Disable Phone Service 
-    Set-Service -StartupType Disabled "PhoneSvc"
-    Stop-Service -Force -Name "PhoneSvc"
-
-    #Disable Parental Controls Service
-    Set-Service -StartupType Disabled "WpcMonSvc"
-    Stop-Service -Force -Name "WpcMonSvc"
-
-    #Disable Payments and NFC/SE Manager Service
-    Set-Service -StartupType Disabled "SEMgrSvc"
-    Stop-Service -Force -Name "SEMgrSvc"
-
-    #Disable Optimize drives Service
-    Set-Service -StartupType Disabled "defragsvc"
-    Stop-Service -Force -Name "defragsvc"
-
-    #Disable Offline Files Service
-    Set-Service -StartupType Disabled "CscService"
-    Stop-Service -Force -Name "CscService"
-
-    #Disable Netlogon Service
-    Set-Service -StartupType Disabled "Netlogon"
-    Stop-Service -Force -Name "Netlogon"
-
-    #Disable Microsoft Windows SMS Router Service
-    Set-Service -StartupType Disabled "SmsRouter"
-    Stop-Service -Force -Name "SmsRouter"
-
-    #Disable Microsoft Store Install Service
-    Set-Service -StartupType Disabled "InstallService"
-    Stop-Service -Force -Name "InstallService"
-
-    #Disable Microsoft Storage Spaces SMP Service
-    Set-Service -StartupType Disabled "smphost"
-    Stop-Service -Force -Name "smphost"
-
-    #Disable Microsoft Software Shadow Copy Provider Service
-    Set-Service -StartupType Disabled "swprv"
-    Stop-Service -Force -Name "swprv"
-
-    #Disable Microsoft Passport Container Service
-    Set-Service -StartupType Disabled "NgcCtnrSvc"
-    Stop-Service -Force -Name "NgcCtnrSvc"
-
-    #Disable Microsoft Passport Service
-    Set-Service -StartupType Disabled "NgcSvc"
-    Stop-Service -Force -Name "NgcSvc"
-
-    #Disable Microsoft Keyboard Filter Service
-    Set-Service -StartupType Disabled "MsKeyboardFilter"
-    Stop-Service -Force -Name "MsKeyboardFilter"
-
-    #Disable Microsoft iSCSI Initiator Service
-    Set-Service -StartupType Disabled "MSiSCSI"
-    Stop-Service -Force -Name "MSiSCSI"
-
-    #Disable Microsoft Edge Update Service
-    Set-Service -StartupType Disabled "edgeupdatem"
-    Stop-Service -Force -Name "edgeupdatem"
-
-    #Disable Microsoft Edge Update Service
-    Set-Service -StartupType Disabled "edgeupdate"
-    Stop-Service -Force -Name "edgeupdate"
-
-    #Disable Microsoft Edge Elevation Service 
-    Set-Service -StartupType Disabled "MicrosoftEdgeElevationService"
-    Stop-Service -Force -Name "MicrosoftEdgeElevationService"
-
-    #Disable Microsoft App-V Client Service
-    Set-Service -StartupType Disabled "AppVClient"
-    Stop-Service -Force -Name "AppVClient"
-
-    #Disable Microsoft Account Sign-in Assistant Service
-    Set-Service -StartupType Disabled "wlidsvc"
-    Stop-Service -Force -Name "wlidsvc"
-
-    #Disable Microsoft (R) Diagnostics Hub Standard Collector Service
-    Set-Service -StartupType Disabled "diagnosticshub.standardcollector.service"
-    Stop-Service -Force -Name "diagnosticshub.standardcollector.service"
-
-    #Disable IP Helper Service
-    Set-Service -StartupType Disabled "iphlpsvc"
-    Stop-Service -Force -Name "iphlpsvc"
-
-    #Disable Geolocation Service
-    Set-Service -StartupType Disabled "lfsvc"
-    Stop-Service -Force -Name "lfsvc"
-
-    #Disable File History Service
-    Set-Service -StartupType Disabled "fhsvc"
-    Stop-Service -Force -Name "fhsvc"
-
-    #Disable Fax Service
-    Set-Service -StartupType Disabled "Fax"
-    Stop-Service -Force -Name "Fax"
-
-    #Disable Embedded Mode Service
-    Set-Service -StartupType Disabled "embeddedmode"
-    Stop-Service -Force -Name "embeddedmode"
-
-    #Disable Downloaded Maps Manager Service
-    Set-Service -StartupType Disabled "MapsBroker"
-    Stop-Service -Force -Name "MapsBroker"
-
-    #Disable Distributed Link Tracking Client Service
-    Set-Service -StartupType Disabled "TrkWks"
-    Stop-Service -Force -Name "TrkWks"
-
-    #Disable Display Policy Service
-    #Can f*ck something up with laptops
-    Set-Service -StartupType Disabled "DispBrokerDesktopSvc"
-    Stop-Service -Force -Name "DispBrokerDesktopSvc"
-
-    #Disable Display Enhancement Service
-    #Can f*ck something up with laptops
-    Set-Service -StartupType Disabled "DisplayEnhancementService"
-    Stop-Service -Force -Name "DisplayEnhancementService"
-
-    #Disable Diagnostic System Host Service
-    Set-Service -StartupType Disabled "WdiSystemHost"
-    Stop-Service -Force -Name "WdiSystemHost"
-
-    #Disable Diagnostic Service Host Service
-    Set-Service -StartupType Disabled "WdiServiceHost"
-    Stop-Service -Force -Name "WdiServiceHost"
-
-    #Disable Diagnostic Policy Service 
-    Set-Service -StartupType Disabled "DPS"
-    Stop-Service -Force -Name "DPS"
-
-    #Disable Diagnostic Execution Service
-    Set-Service -StartupType Disabled "diagsvc"
-    Stop-Service -Force -Name "diagsvc"
-
-    #Disable Delivery Optimization Service
-    Set-Service -StartupType Disabled "DoSvc"
-    Stop-Service -Force -Name "DoSvc"
-
-    #Disable Data Usage Service
-    Set-Service -StartupType Disabled "DusmSvc"
-    Stop-Service -Force -Name "DusmSvc"
-
-    #Disable Data Sharing Service
-    Set-Service -StartupType Disabled "DsSvc"
-    Stop-Service -Force -Name "DsSvc"
-
-    #Disable Cryptographic Service
-    Set-Service -StartupType Disabled "CryptSvc"
-    Stop-Service -Force -Name "CryptSvc"
-
-    #Disable Credential Manager Service
-    Set-Service -StartupType Disabled "VaultSvc"
-    Stop-Service -Force -Name "VaultSvc"
-     
-    #Disable Connected User Experiences and Telemetry Service
-    Set-Service -StartupType Disabled "DiagTrack"
-    Stop-Service -Force -Name "DiagTrack"
-
-    #Disable Cellular Time Service
-    Set-Service -StartupType Disabled "autotimesvc"
-    Stop-Service -Force -Name "autotimesvc"
-
-    #Disable Bluetooth Support Service
-    Set-Service -StartupType Disabled "bthserv"
-    Stop-Service -Force -Name "bthserv"
-
-    #Disable Bluetooth Audio Gateway Service
-    Set-Service -StartupType Disabled "BTAGService"
-    Stop-Service -Force -Name "BTAGService"
-
-    #Disable BitLocker Drive Encryption Service
-    Set-Service -StartupType Disabled "BDESVC"
-    Stop-Service -Force -Name "BDESVC"
-
-    #Disable Auto Time Zone Updater Service
-    Set-Service -StartupType Disabled "tzautoupdate"
-    Stop-Service -Force -Name "tzautoupdate"
 
     #Now some tasks
     #   Disable-ScheduledTask -TaskName "Path" | Out-Null
@@ -712,7 +430,6 @@ $essentialtweaks.Add_Click({
     Disable-ScheduledTask -TaskName "\Microsoft\Windows\SoftwareProtectionPlatform\SvcRestartTaskNetwork" | Out-Null
     Disable-ScheduledTask -TaskName "\Microsoft\Windows\Shell\IndexerAutomaticMaintenance" | Out-Null
     Disable-ScheduledTask -TaskName "\Microsoft\Windows\Setup\SetupCleanupTask" | Out-Null
-    Disable-ScheduledTask -TaskName "\Microsoft\Windows\SettingSync\BackgroundUploadTask" | Out-Null
     Disable-ScheduledTask -TaskName "\Microsoft\Windows\SettingSync\NetworkStateChangeTask" | Out-Null
     Disable-ScheduledTask -TaskName "\Microsoft\Windows\Registry\RegIdleBackup" | Out-Null
     Disable-ScheduledTask -TaskName "\Microsoft\Windows\Printing\EduPrintProv" | Out-Null
@@ -745,22 +462,120 @@ $essentialtweaks.Add_Click({
     Disable-ScheduledTask -TaskName "\Microsoft\Windows\Clip\License Validation" | Out-Null
     Disable-ScheduledTask -TaskName "\Microsoft\Windows\BrokerInfrastructure\BgTaskRegistrationMaintenanceTask" | Out-Null
     Disable-ScheduledTask -TaskName "\Microsoft\Windows\Bluetooth\UninstallDeviceTask" | Out-Null
-    Disable-ScheduledTask -TaskName "\Microsoft\Windows\BitLocker\BitLocker MDM policy Refresh" | Out-Null
-    Disable-ScheduledTask -TaskName "\Microsoft\Windows\BitLocker\BitLocker Encrypt All Drives" | Out-Null
     Disable-ScheduledTask -TaskName "\Microsoft\Windows\Application Experience\ProgramDataUpdater" | Out-Null
     Disable-ScheduledTask -TaskName "\Microsoft\Windows\Application Experience\StartupAppTask" | Out-Null
     Disable-ScheduledTask -TaskName "\MicrosoftEdgeUpdateTaskMachineUA" | Out-Null
     Disable-ScheduledTask -TaskName "\MicrosoftEdgeUpdateTaskMachineCore" | Out-Null
 
     #Disable Hibernation
-    writeHost "Disabled Hibernation"
-    Set-ItemProperty -Path "HKLM:\System\CurrentControlSet\Control\Session Manager\Power" -Name "HibernteEnabled" -Type Dword -Value 0
-    Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\FlyoutMenuSettings" -Name "ShowHibernateOption" -Type Dword -Value 0
+    write-Host "Trying to disable Hibernation..."
+    if (!(Test-Path "HKLM:\System\CurrentControlSet\Control\Session Manager\Power")) {
+        New-Item -Path "HKLM:\System\CurrentControlSet\Control\Session Manager\Power" -Force
+        Set-ItemProperty -Path "HKLM:\System\CurrentControlSet\Control\Session Manager\Power" -Name "HibernteEnabled" -Type Dword -Value 0
+    } else { 
+        Set-ItemProperty -Path "HKLM:\System\CurrentControlSet\Control\Session Manager\Power" -Name "HibernteEnabled" -Type Dword -Value 0
+    }
+
+    if (!(Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\FlyoutMenuSettings")) {
+        New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\FlyoutMenuSettings" -Force
+        Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\FlyoutMenuSettings" -Name "ShowHibernateOption" -Type Dword -Value 0
+    } else {
+        Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\FlyoutMenuSettings" -Name "ShowHibernateOption" -Type Dword -Value 0
+    }
+    
 
     #Uninstall all Metro applications!
-    writeHost "Now uninstalling all Metro applications"
-    Get-AppxPackage -AllUsers | Remove-AppxPackage
-    Get-AppxPackage | Remove-AppxPackage
+    write-Host "Trying to remove all bloatware..."
+
+    $Bloatware = @(
+    "Microsoft.3DBuilder"
+    "Microsoft.Microsoft3DViewer"
+    "Microsoft.AppConnector"
+    "Microsoft.BingFinance"
+    "Microsoft.BingNews"
+    "Microsoft.BingSports"
+    "Microsoft.BingTranslator"
+    "Microsoft.BingWeather"
+    "Microsoft.BingFoodAndDrink"
+    "Microsoft.BingHealthAndFitness"
+    "Microsoft.BingTravel"
+    "Microsoft.MinecraftUWP"
+    "Microsoft.GamingServices"
+    "Microsoft.GetHelp"
+    "Microsoft.Getstarted"
+    "Microsoft.Messaging"
+    "Microsoft.Microsoft3DViewer"
+    "Microsoft.MicrosoftSolitaireCollection"
+    "Microsoft.NetworkSpeedTest"
+    "Microsoft.News"
+    "Microsoft.Office.Lens"
+    "Microsoft.Office.Sway"
+    "Microsoft.Office.OneNote"
+    "Microsoft.OneConnect"
+    "Microsoft.People"
+    "Microsoft.Print3D"
+    "Microsoft.SkypeApp"
+    "Microsoft.Wallet"
+    "Microsoft.Whiteboard"
+    "Microsoft.WindowsAlarms"
+    "microsoft.windowscommunicationsapps"
+    "Microsoft.WindowsFeedbackHub"
+    "Microsoft.WindowsMaps"
+    "Microsoft.WindowsPhone"
+    "Microsoft.WindowsSoundRecorder"
+    "Microsoft.XboxApp"
+    "Microsoft.ConnectivityStore"
+    "Microsoft.CommsPhone"
+    "Microsoft.ScreenSketch"
+    "Microsoft.Xbox.TCUI"
+    "Microsoft.XboxGameOverlay"
+    "Microsoft.XboxGameCallableUI"
+    "Microsoft.XboxSpeechToTextOverlay"
+    "Microsoft.MixedReality.Portal"
+    "Microsoft.XboxIdentityProvider"
+    "Microsoft.ZuneMusic"
+    "Microsoft.ZuneVideo"
+    "Microsoft.YourPhone"
+    "Microsoft.Getstarted"
+    "Microsoft.MicrosoftOfficeHub"
+    "*EclipseManager*"
+    "*ActiproSoftwareLLC*"
+    "*AdobeSystemsIncorporated.AdobePhotoshopExpress*"
+    "*Duolingo-LearnLanguagesforFree*"
+    "*PandoraMediaInc*"
+    "*CandyCrush*"
+    "*BubbleWitch3Saga*"
+    "*Wunderlist*"
+    "*Flipboard*"
+    "*Twitter*"
+    "*Facebook*"
+    "*Royal Revolt*"
+    "*Sway*"
+    "*Speed Test*"
+    "*Dolby*"
+    "*Viber*"
+    "*ACGMediaPlayer*"
+    "*Netflix*"
+    "*OneCalendar*"
+    "*LinkedInforWindows*"
+    "*HiddenCityMysteryofShadows*"
+    "*Hulu*"
+    "*HiddenCity*"
+    "*AdobePhotoshopExpress*"
+    "*Microsoft.Advertising.Xaml*"
+    "*Microsoft.MSPaint*"
+    "*Microsoft.MicrosoftStickyNotes*"
+    "*Microsoft.Windows.Photos*"
+    "*Microsoft.WindowsCalculator*"
+    "*Microsoft.WindowsStore*"
+    )
+
+
+    foreach ($Bloat in $Bloatware) {
+        Get-AppxPackage -Name $Bloat| Remove-AppxPackage
+        Get-AppxProvisionedPackage -Online | Where-Object DisplayName -like $Bloat | Remove-AppxProvisionedPackage -Online
+    }
+
     write-Host "Metro applications should be gone now"
     
     write-Host "More registry tweaking..."
@@ -798,8 +613,18 @@ $essentialtweaks.Add_Click({
         write-Host "Advertising ID has been disabled"
 
         #Disable SmartScreen
-        Set-ItemProperty -Path "HKLM:\Software\Microsoft\Windows\CurrentVersion\Explorer" -Name "SmartScreenEnabled" -Type String -Value "Off"
-        Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\AppHost" -Name "EnableWebContentEvaluation" -Type DWord -Value 0
+        if (!(Test-Path "HKLM:\Software\Microsoft\Windows\CurrentVersion\Explorer")){
+            New-Item -Path "HKLM:\Software\Microsoft\Windows\CurrentVersion\Explorer" -Force | Out-Null
+            Set-ItemProperty -Path "HKLM:\Software\Microsoft\Windows\CurrentVersion\Explorer" -Name "SmartScreenEnabled" -Type String -Value "Off"
+        } else {
+            Set-ItemProperty -Path "HKLM:\Software\Microsoft\Windows\CurrentVersion\Explorer" -Name "SmartScreenEnabled" -Type String -Value "Off"
+        }
+        if (!(Test-Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\AppHost")){
+            New-Item -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\AppHost" -Force | Out-Null
+            Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\AppHost" -Name "EnableWebContentEvaluation" -Type DWord -Value 0
+        } else {
+            Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\AppHost" -Name "EnableWebContentEvaluation" -Type DWord -Value 0
+        }
         write-Host "SmartScreen has been disabled"
 
         #Disable WiFi Sense
@@ -812,30 +637,30 @@ $essentialtweaks.Add_Click({
         write-Host "Wi-Fi Sense has been disabled"
 
         #Disable Firewall
-        write-Host "Disabled Windows Defender"
+        write-Host "Disabled Windows Firewall"
         Set-NetFirewallProfile -Profile * -Enabled False
 
         #Disable Windows Defender
-        write-Host "Disabled Windows Defender"
         Set-ItemProperty -Path "HKLM:\Software\Policies\Microsoft\Windows Defender" -Name "DisableAntiSpyware" -Type DWord -Value 1
+        write-Host "Disabled Windows Defender"
 
         #Disable Remote Desktop
-        write-Host "Disabled Remote Desktop"
         Set-ItemProperty -Path "HKLM:\System\CurrentControlSet\Control\Terminal Server" -Name "fDenyTSConnections" -Type DWord -Value 1
         Set-ItemProperty -Path "HKLM:\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp" -Name "UserAuthentication" -Type DWord -Value 1
+        write-Host "Disabled Remote Desktop"
 
         #Disable AutoPlay
-        write-Host "Disabled AutoPlay"
         Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\AutoplayHandlers" -Name "DisableAutoplay" -Type DWord -Value 1
-
+        write-Host "Disabled AutoPlay"
         #Taskbar Tweaks
+
             #Search Icon - Disable
-            write-Host "Disabled Search on taskbar"
             Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Search" -Name "SearchboxTaskbarMode" -Type DWord -Value 0
+            write-Host "Disabled Search on taskbar"
 
             #Task View Icon - Disable
-            write-Host "Disabled Task View button on taskbar"
             Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name "ShowTaskViewButton" -Type DWord -Value 0
+            write-Host "Disabled Task View button on taskbar"
 
             #Taskbar Show Small Icons - Enable
             #   Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name "TaskbarSmallIcons" -Type DWord -Value 1
@@ -845,6 +670,47 @@ $essentialtweaks.Add_Click({
         #Disable Transparency Effects
         Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize" -Name "EnableTransparency" -Type DWord -Value 0
         write-Host "Transparency Effects has been turned off"
+
+        #Disable File Histroy
+        if (!(Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\FileHistory")){
+            New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\FileHistory" -Force | Out-Null
+        }
+        Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\FileHistory" -Name "Disabled" -Type DWord -Value 1
+
+        #Random Registry Tweaks
+        if (!(Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\HandwritingErrorReports")){
+            New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\HandwritingErrorReports" -Force | Out-Null
+        }
+        Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\HandwritingErrorReports" -Name "PreventHandwritingErrorReports" -Type DWord -Value 1
+        if (!(Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\LocationAndSensors")){
+            New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\LocationAndSensors" -Force | Out-Null
+        }
+        Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\LocationAndSensors" -Name "DisableLocation" -Type DWord -Value 1
+        Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\LocationAndSensors" -Name "DisableLocationScripting" -Type DWord -Value 1
+        Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\LocationAndSensors" -Name "DisableSensors" -Type DWord -Value 1
+        Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\LocationAndSensors" -Name "DisableWindowsLocationProvider" -Type DWord -Value 1
+        if (!(Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Messaging")){
+            New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Messaging" -Force | Out-Null
+        }
+        Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Messaging" -Name "AllowMessageSync" -Type DWord -Value 0
+
+        #Auto Map Updates - Disable
+        if (!(Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Maps")){
+            New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Maps" -Force | Out-Null
+        }
+        Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Maps" -Name "AutoDownloadAndUpdateMapData" -Type DWord -Value 0
+
+        #Disable App Notifications 
+        if (!(Test-Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Notifications\Settings")){
+            New-Item -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Notifications\Settings" -Force | Out-Null
+        }
+        Get-ChildItem -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Notifications\Settings" | ForEach {
+            Set-ItemProperty -Path $_.PsPath -Name "Enabled" -Type DWord -Value 0
+        }
+        
+        #Restarting Windows Explorer to apply some tweaks
+        Start-Sleep -Seconds 1
+        Stop-Process -Name explorer -Force -PassThru
 
     Write-Host "Tweaks are done!"
 })
@@ -888,10 +754,11 @@ $cortana.Add_Click({
 
 $backgroundapps.Add_Click({
     Write-Host "Disabling Background application access..."
-    Get-ChildItem -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\BackgroundAccessApplications" -Exclude "Microsoft.Windows.Cortana*" | ForEach {
+    Get-ChildItem -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\BackgroundAccessApplications" | ForEach {
         Set-ItemProperty -Path $_.PsPath -Name "Disabled" -Type DWord -Value 1
         Set-ItemProperty -Path $_.PsPath -Name "DisabledByUser" -Type DWord -Value 1
     }
+    Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\BackgroundAccessApplications" -Name "GlobalUserDisabled" -Type DWord -Value 1
     Write-Host "Disabled Background application access"
 })
 
@@ -907,23 +774,65 @@ $actioncenter.Add_Click({
 
 $visualfx.Add_Click({
     Write-Host "Adjusting visual effects for performance..."
+    if (!(Test-Path "HKCU:\Control Panel\Desktop")){
+        New-Item -Path "HKCU:\Control Panel\Desktop" -Force | Out-Null
+    }
     Set-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name "DragFullWindows" -Type String -Value 0
     Set-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name "MenuShowDelay" -Type String -Value 200
     Set-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name "UserPreferencesMask" -Type Binary -Value ([byte[]](144,18,3,128,16,0,0,0))
+    if (!(Test-Path "HKCU:\Control Panel\Desktop\WindowMetrics")){
+        New-Item -Path "HKCU:\Control Panel\Desktop\WindowMetrics" -Force | Out-Null
+    }
     Set-ItemProperty -Path "HKCU:\Control Panel\Desktop\WindowMetrics" -Name "MinAnimate" -Type String -Value 0
+    if (!(Test-Path "HKCU:\Control Panel\Keyboard")){
+        New-Item -Path "HKCU:\Control Panel\Keyboard" -Force | Out-Null
+    }
     Set-ItemProperty -Path "HKCU:\Control Panel\Keyboard" -Name "KeyboardDelay" -Type DWord -Value 0
+    if (!(Test-Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced")){
+        New-Item -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Force | Out-Null
+    }
     Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name "ListviewAlphaSelect" -Type DWord -Value 0
     Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name "ListviewShadow" -Type DWord -Value 0
     Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name "TaskbarAnimations" -Type DWord -Value 0
+    if (!(Test-Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects")){
+        New-Item -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects" -Force | Out-Null
+    }
     Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects" -Name "VisualFXSetting" -Type DWord -Value 3
+    if (!(Test-Path "HKCU:\Software\Microsoft\Windows\DWM")){
+        New-Item -Path "HKCU:\Software\Microsoft\Windows\DWM" -Force | Out-Null
+    }
     Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\DWM" -Name "EnableAeroPeek" -Type DWord -Value 0
+    if (!(Test-Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects\TaskbarAnimations")){
+        New-Item -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects\TaskbarAnimations" -Force | Out-Null
+    }
     Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects\TaskbarAnimations" -Name "DefaultApplied" -Type DWord -Value 0
+    if (!(Test-Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects\ListBoxSmoothScrolling")){
+        New-Item -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects\ListBoxSmoothScrolling" -Force | Out-Null
+    }
     Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects\ListBoxSmoothScrolling" -Name "DefaultApplied" -Type DWord -Value 0
+    if (!(Test-Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects\DWMAeroPeekEnabled")){
+        New-Item -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects\DWMAeroPeekEnabled" -Force | Out-Null
+    }
     Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects\DWMAeroPeekEnabled" -Name "DefaultApplied" -Type DWord -Value 0
+    if (!(Test-Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects\MenuAnimation")){
+        New-Item -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects\MenuAnimation" -Force | Out-Null
+    }
     Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects\MenuAnimation" -Name "DefaultApplied" -Type DWord -Value 0
+    if (!(Test-Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects\TooltipAnimation")){
+        New-Item -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects\TooltipAnimation" -Force | Out-Null
+    }
     Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects\TooltipAnimation" -Name "DefaultApplied" -Type DWord -Value 0
+    if (!(Test-Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects\ComboBoxAnimation")){
+        New-Item -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects\ComboBoxAnimation" -Force | Out-Null
+    }
     Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects\ComboBoxAnimation" -Name "DefaultApplied" -Type DWord -Value 0
+    if (!(Test-Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects\CursorShadow")){
+        New-Item -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects\CursorShadow" -Force | Out-Null
+    }
     Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects\CursorShadow" -Name "DefaultApplied" -Type DWord -Value 0
+    #Restarting Windows Explorer to apply visual tweaks
+    Start-Sleep -Seconds 1
+    Stop-Process -Name explorer -Force
     Write-Host "Adjusted visual effects for performance"
 })
 
@@ -972,14 +881,19 @@ $onedrive.Add_Click({
 $darkmode.Add_Click({
     #Dark Mode
     Write-Host "Enabling Dark Mode"
-    Set-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize -Name AppsUseLightTheme -Value 0
-    reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes" /f
-    reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes" /v "AppsUseLightTheme" /t "REG_DWORD" /d "0" /f
-    reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes" /v "SystemUsesLightTheme" /t "REG_DWORD" /d "0" /f
-    reg add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes" /f
-    reg add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize" /f
-    reg add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize" /v "AppsUseLightTheme" /t "REG_DWORD" /d "0" /f
-    reg add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize" /v "SystemUsesLightTheme" /t "REG_DWORD" /d "0" /f
+    if (!(Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes")){
+    New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes" -Force | Out-Null
+    }
+    Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes" -Name "AppsUseLightTheme" -Type DWord -Value 0
+    Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes" -Name "SystemUsesLightTheme" -Type DWord -Value 0
+    if (!(Test-Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes")){
+        New-Item -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes" -Force | Out-Null
+    }
+    if (!(Test-Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize")){
+        New-Item -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize" -Force | Out-Null
+    }
+    Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize" -Name "AppsUseLightTheme" -Type DWord -Value 0
+    Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize" -Name "SystemUsesLightTheme" -Type DWord -Value 0
     reg add "HKEY_USERS\.DEFAULT\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes" /f
     reg add "HKEY_USERS\.DEFAULT\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize" /f
     reg add "HKEY_USERS\.DEFAULT\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize" /v "AppsUseLightTheme" /t "REG_DWORD" /d "0" /f
@@ -990,14 +904,19 @@ $darkmode.Add_Click({
 $lightmode.Add_Click({
     #Light Mode
     Write-Host "Switching Back to Light Mode"
-    Remove-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize -Name AppsUseLightTheme
-    reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes" /f
-    reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes" /v "AppsUseLightTheme" /t "REG_DWORD" /d "1" /f
-    reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes" /v "SystemUsesLightTheme" /t "REG_DWORD" /d "1" /f
-    reg add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes" /f
-    reg add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize" /f
-    reg add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize" /v "AppsUseLightTheme" /t "REG_DWORD" /d "1" /f
-    reg add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize" /v "SystemUsesLightTheme" /t "REG_DWORD" /d "1" /f
+   if (!(Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes")){
+    New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes" -Force | Out-Null
+    }
+    Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes" -Name "AppsUseLightTheme" -Type DWord -Value 1
+    Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes" -Name "SystemUsesLightTheme" -Type DWord -Value 1
+    if (!(Test-Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes")){
+        New-Item -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes" -Force | Out-Null
+    }
+    if (!(Test-Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize")){
+        New-Item -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize" -Force | Out-Null
+    }
+    Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize" -Name "AppsUseLightTheme" -Type DWord -Value 1
+    Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize" -Name "SystemUsesLightTheme" -Type DWord -Value 1
     reg add "HKEY_USERS\.DEFAULT\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes" /f
     reg add "HKEY_USERS\.DEFAULT\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize" /f
     reg add "HKEY_USERS\.DEFAULT\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize" /v "AppsUseLightTheme" /t "REG_DWORD" /d "1" /f
@@ -1017,23 +936,19 @@ $DisableNumLock.Add_Click({
 
 $disablewindowsupdate.Add_Click({
     #Disable Windows Update Services
-    Stop-Service -Force -Name "wuauserv"
-    Stop-Service -Force -Name "UsoSvc"
-    Stop-Service -Force -Name "wisvc"
-    Set-Service "wuauserv" -StartupType Disabled
-    Set-Service "WaaSMedicSvc" -StartupType Disabled
-    Set-Service "UsoSvc" -StartupType Disabled
-    Set-Service "wisvc" -StartupType Disabled
-    
-    
+    Get-Service -DisplayName "Windows Update" | Set-Service -StartupType Disabled -ErrorAction SilentlyContinue
+    Get-Service -DisplayName "Windows Update Medic Service" | Set-Service -StartupType Disabled -ErrorAction SilentlyContinue
+    Stop-Service -DisplayName "Windows Update" -Force -PassThru
+    Stop-Service -DisplayName "Windows Update Medic Service" -Force -PassThru
+
     #Disable Windows Update Scheduled Tasks
     Disable-ScheduledTask -TaskName "\Microsoft\Windows\WindowsUpdate\Scheduled Start" | Out-Null
     Disable-ScheduledTask -TaskName "\Microsoft\Windows\WaaSMedic\PerformRemediation" | Out-Null
-    Disable-ScheduledTask -TaskName "\Microsoft\Windows\UpdateOrchestrator\Report policies" | Out-Null
-    Disable-ScheduledTask -TaskName "\Microsoft\Windows\UpdateOrchestrator\Schedule Scan" | Out-Null
-    Disable-ScheduledTask -TaskName "\Microsoft\Windows\UpdateOrchestrator\Schedule Scan Static Task" | Out-Null
-    Disable-ScheduledTask -TaskName "\Microsoft\Windows\UpdateOrchestrator\UpdateModelTask" | Out-Null
-    Disable-ScheduledTask -TaskName "\Microsoft\Windows\UpdateOrchestrator\USO_UxBroker" | Out-Null
+    #Disable-ScheduledTask -TaskName "\Microsoft\Windows\UpdateOrchestrator\Report policies" | Out-Null
+    #Disable-ScheduledTask -TaskName "\Microsoft\Windows\UpdateOrchestrator\Schedule Scan" | Out-Null
+    #Disable-ScheduledTask -TaskName "\Microsoft\Windows\UpdateOrchestrator\Schedule Scan Static Task" | Out-Null
+    #Disable-ScheduledTask -TaskName "\Microsoft\Windows\UpdateOrchestrator\UpdateModelTask" | Out-Null
+    #Disable-ScheduledTask -TaskName "\Microsoft\Windows\UpdateOrchestrator\USO_UxBroker" | Out-Null
 
     #Disable automatic Windows Update restart
     Set-ItemProperty -Path "HKLM:\Software\Microsoft\WindowsUpdate\UX\Settings" -Name "UxOption" -Type DWord -Value 1
@@ -1043,22 +958,19 @@ $disablewindowsupdate.Add_Click({
 
 $enablewindowsupdate.Add_Click({
     #Enable Windows Update Services
-    Set-Service "wuauserv" -StartupType Manual
-    Set-Service "wisvc" -StartupType Manual
-    Set-Service "WaaSMedicSvc" -StartupType Manual
-    Set-Service "UsoSvc" -StartupType Manual
-    Start-Service -Name "wuauserv"
-    Start-Service -Name "UsoSvc"
-    Start-Service -Name "wisvc"
+    Get-Service -DisplayName "Windows Update" | Set-Service -StartupType Automatic -ErrorAction SilentlyContinue
+    Get-Service -DisplayName "Windows Update Medic Service" | Set-Service -StartupType Automatic -ErrorAction SilentlyContinue
+    Start-Service -DisplayName "Windows Update" -PassThru -ErrorAction SilentlyContinue
+    Start-Service -DisplayName "Windows Update Medic Service" -PassThru -ErrorAction SilentlyContinue
 
     #Enable Windows Update Scheduled Tasks
     Enable-ScheduledTask -TaskName "\Microsoft\Windows\WindowsUpdate\Scheduled Start" | Out-Null
     Enable-ScheduledTask -TaskName "\Microsoft\Windows\WaaSMedic\PerformRemediation" | Out-Null
-    Enable-ScheduledTask -TaskName "\Microsoft\Windows\UpdateOrchestrator\Report policies" | Out-Null
-    Enable-ScheduledTask -TaskName "\Microsoft\Windows\UpdateOrchestrator\Schedule Scan" | Out-Null
-    Enable-ScheduledTask -TaskName "\Microsoft\Windows\UpdateOrchestrator\Schedule Scan Static Task" | Out-Null
-    Enable-ScheduledTask -TaskName "\Microsoft\Windows\UpdateOrchestrator\UpdateModelTask" | Out-Null
-    Enable-ScheduledTask -TaskName "\Microsoft\Windows\UpdateOrchestrator\USO_UxBroker" | Out-Null
+    #Enable-ScheduledTask -TaskName "\Microsoft\Windows\UpdateOrchestrator\Report policies" | Out-Null
+    #Enable-ScheduledTask -TaskName "\Microsoft\Windows\UpdateOrchestrator\Schedule Scan" | Out-Null
+    #Enable-ScheduledTask -TaskName "\Microsoft\Windows\UpdateOrchestrator\Schedule Scan Static Task" | Out-Null
+    #Enable-ScheduledTask -TaskName "\Microsoft\Windows\UpdateOrchestrator\UpdateModelTask" | Out-Null
+    #Enable-ScheduledTask -TaskName "\Microsoft\Windows\UpdateOrchestrator\USO_UxBroker" | Out-Null
 
     #Enable automatic Windows Update restart
     Set-ItemProperty -Path "HKLM:\Software\Microsoft\WindowsUpdate\UX\Settings" -Name "UxOption" -Type DWord -Value 0
@@ -1068,7 +980,10 @@ $enablewindowsupdate.Add_Click({
 
 $smalltaskbaricons.Add_Click({
 
-    #Use Small Taskbar Icons    
+    #Use Small Taskbar Icons  
+    if (!(Test-Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced")){
+        New-Item -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Force | Out-Null
+    }
     Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name "TaskbarSmallIcons" -Type DWord -Value 1
     Stop-Process -Name "explorer" -ErrorAction SilentlyContinue
     write-Host "You should have small taskbar icons now!"
