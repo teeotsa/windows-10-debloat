@@ -126,14 +126,18 @@ $lightmode.height                = 30
 $lightmode.location              = New-Object System.Drawing.Point(4,279)
 $lightmode.Font                  = New-Object System.Drawing.Font('Microsoft Sans Serif',12)
 
-$Panel3                          = New-Object system.Windows.Forms.Panel
-$Panel3.height                   = 387
-$Panel3.width                    = 220
-$Panel3.location                 = New-Object System.Drawing.Point(464,54)
+$WindowsCleaner                  = New-Object system.Windows.Forms.Button
+$WindowsCleaner.text             = "Windows Cleaner"
+$WindowsCleaner.width            = 250
+$WindowsCleaner.height           = 30
+$WindowsCleaner.location         = New-Object System.Drawing.Point(5,146)
+$WindowsCleaner.Font             = New-Object System.Drawing.Font('Microsoft Sans Serif',12)
+
+
 
 $Form.controls.AddRange(@($Panel1,$Panel2,$Label3,$Label15,$Panel4,$PictureBox1,$Label1,$Label4,$Panel3))
 $Panel2.controls.AddRange(@($essentialtweaks,$backgroundapps,$cortana,$actioncenter,$darkmode,$visualfx,$onedrive,$lightmode))
-$Panel4.controls.AddRange(@($disablewindowsupdate,$enablewindowsupdate,$smalltaskbaricons,$Label16,$Label17,$Label18,$Label19))
+$Panel4.controls.AddRange(@($disablewindowsupdate,$enablewindowsupdate,$smalltaskbaricons,$Label16,$Label17,$Label18,$Label19,$WindowsCleaner))
 
 $essentialtweaks.Add_Click({
 
@@ -968,6 +972,23 @@ $smalltaskbaricons.Add_Click({
     Stop-Process -Name "explorer" -Force -PassThru -ErrorAction SilentlyContinue
     write-Host "You should have small taskbar icons now!"
 
+})
+
+$WindowsCleaner.Add_Click({
+    $URL = "https://raw.githubusercontent.com/teeotsa/windows-cleaner/main/Cleaner.bat"
+    $CleanerFile = Invoke-WebRequest $URL
+    $Username = $env:UserName
+    $File = "C:\Users\$Username\Desktop\Cleaner.bat"
+    #To test if this method works!
+    #write-Host $CleanerFile
+    New-Item -Path $File -Value $CleanerFile | Out-Null
+    Start-Sleep -Seconds 1
+    if (!(Get-Item "C:\Users\$Username\Desktop\Cleaner.bat")){
+        write-Host "Something went wrong!"
+    } else {
+        Start-Process "C:\Users\$Username\Desktop\Cleaner.bat" -Verb RunAs
+        write-Host "Destination of the script : C:\Users\$Username\Desktop\Cleaner.bat"
+    }
 })
 
 [void]$Form.ShowDialog()
