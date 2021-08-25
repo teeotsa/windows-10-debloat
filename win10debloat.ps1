@@ -12,6 +12,10 @@ If (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]:
 
 Clear-Host
 
+#Some Form settings
+$WindowsUpdateLabelLeft = 295
+$SystemTweaksLeft = 40
+
 $Form                            = New-Object system.Windows.Forms.Form
 $Form.ClientSize                 = New-Object System.Drawing.Point(1050,700)
 $Form.text                       = "Windows 10 Debloater"
@@ -20,70 +24,79 @@ $Form.TopMost                    = $false
 $Form.BackColor                  = [System.Drawing.ColorTranslator]::FromHtml("#b8b8b8")
 $Form.AutoScaleDimensions        = '192, 192'
 $Form.AutoSize                   = $False
-$Form.ClientSize                 = '575, 400'
+$Form.ClientSize                 = '575, 450'
 $Form.FormBorderStyle            = 'Sizable'
-
-$Panel2                          = New-Object system.Windows.Forms.Panel
-$Panel2.height                   = 386
-$Panel2.width                    = 211
-$Panel2.location                 = New-Object System.Drawing.Point(30,54)
 
 $Label3                          = New-Object system.Windows.Forms.Label
 $Label3.text                     = "System Tweaks"
 $Label3.AutoSize                 = $true
 $Label3.width                    = 230
 $Label3.height                   = 25
-$Label3.location                 = New-Object System.Drawing.Point(30,12)
+$Label3.location                 = New-Object System.Drawing.Point(35,12)
 $Label3.Font                     = New-Object System.Drawing.Font('Microsoft Sans Serif',24)
 
 $essentialtweaks                 = New-Object system.Windows.Forms.Button
 $essentialtweaks.text            = "Essential Tweaks"
 $essentialtweaks.width           = 204
-$essentialtweaks.height          = 75
-$essentialtweaks.location        = New-Object System.Drawing.Point(4,25)
-$essentialtweaks.Font            = New-Object System.Drawing.Font('Microsoft Sans Serif',14)
+$essentialtweaks.height          = 30
+$essentialtweaks.location        = New-Object System.Drawing.Point($SystemTweaksLeft,56)
+$essentialtweaks.Font            = New-Object System.Drawing.Font('Microsoft Sans Serif',12)
+
+$actioncenter                    = New-Object system.Windows.Forms.Button
+$actioncenter.text               = "Disable Action Center"
+$actioncenter.width              = 203
+$actioncenter.height             = 30
+$actioncenter.location           = New-Object System.Drawing.Point($SystemTweaksLeft,96)
+$actioncenter.Font               = New-Object System.Drawing.Font('Microsoft Sans Serif',12)
 
 $backgroundapps                  = New-Object system.Windows.Forms.Button
 $backgroundapps.text             = "Disable Background Apps"
 $backgroundapps.width            = 205
 $backgroundapps.height           = 30
-$backgroundapps.location         = New-Object System.Drawing.Point(3,139)
+$backgroundapps.location         = New-Object System.Drawing.Point($SystemTweaksLeft,136)
 $backgroundapps.Font             = New-Object System.Drawing.Font('Microsoft Sans Serif',12)
 
 $cortana                         = New-Object system.Windows.Forms.Button
 $cortana.text                    = "Disable Cortana (Search)"
 $cortana.width                   = 204
 $cortana.height                  = 30
-$cortana.location                = New-Object System.Drawing.Point(4,174)
+$cortana.location                = New-Object System.Drawing.Point($SystemTweaksLeft,176)
 $cortana.Font                    = New-Object System.Drawing.Font('Microsoft Sans Serif',12)
-
-$actioncenter                    = New-Object system.Windows.Forms.Button
-$actioncenter.text               = "Disable Action Center"
-$actioncenter.width              = 203
-$actioncenter.height             = 30
-$actioncenter.location           = New-Object System.Drawing.Point(4,105)
-$actioncenter.Font               = New-Object System.Drawing.Font('Microsoft Sans Serif',12)
-
-$darkmode                        = New-Object system.Windows.Forms.Button
-$darkmode.text                   = "Dark Mode"
-$darkmode.width                  = 204
-$darkmode.height                 = 30
-$darkmode.location               = New-Object System.Drawing.Point(4,244)
-$darkmode.Font                   = New-Object System.Drawing.Font('Microsoft Sans Serif',12)
-
-$visualfx                        = New-Object system.Windows.Forms.Button
-$visualfx.text                   = "Basic Visual FX"
-$visualfx.width                  = 204
-$visualfx.height                 = 30
-$visualfx.location               = New-Object System.Drawing.Point(4,313)
-$visualfx.Font                   = New-Object System.Drawing.Font('Microsoft Sans Serif',12)
 
 $onedrive                        = New-Object system.Windows.Forms.Button
 $onedrive.text                   = "Uninstall OneDrive"
 $onedrive.width                  = 204
 $onedrive.height                 = 30
-$onedrive.location               = New-Object System.Drawing.Point(4,209)
+$onedrive.location               = New-Object System.Drawing.Point($SystemTweaksLeft,216)
 $onedrive.Font                   = New-Object System.Drawing.Font('Microsoft Sans Serif',12)
+
+$darkmode                        = New-Object system.Windows.Forms.Button
+$darkmode.text                   = "Dark Mode"
+$darkmode.width                  = 204
+$darkmode.height                 = 30
+$darkmode.location               = New-Object System.Drawing.Point($SystemTweaksLeft,256)
+$darkmode.Font                   = New-Object System.Drawing.Font('Microsoft Sans Serif',12)
+
+$lightmode                       = New-Object system.Windows.Forms.Button
+$lightmode.text                  = "Light Mode"
+$lightmode.width                 = 204
+$lightmode.height                = 30
+$lightmode.location              = New-Object System.Drawing.Point($SystemTweaksLeft,296)
+$lightmode.Font                  = New-Object System.Drawing.Font('Microsoft Sans Serif',12)
+
+$visualfx                        = New-Object system.Windows.Forms.Button
+$visualfx.text                   = "Basic Visual FX"
+$visualfx.width                  = 204
+$visualfx.height                 = 30
+$visualfx.location               = New-Object System.Drawing.Point($SystemTweaksLeft,336)
+$visualfx.Font                   = New-Object System.Drawing.Font('Microsoft Sans Serif',12)
+
+$RemoveBloat                     = New-Object system.Windows.Forms.Button
+$RemoveBloat.text                = "Uninstall Bloatware"
+$RemoveBloat.width               = 204
+$RemoveBloat.height              = 30
+$RemoveBloat.location            = New-Object System.Drawing.Point($SystemTweaksLeft,376)
+$RemoveBloat.Font                = New-Object System.Drawing.Font('Microsoft Sans Serif',12)
 
 $Label15                         = New-Object system.Windows.Forms.Label
 $Label15.text                    = "Windows Update"
@@ -93,51 +106,35 @@ $Label15.height                  = 10
 $Label15.location                = New-Object System.Drawing.Point(290,11)
 $Label15.Font                    = New-Object System.Drawing.Font('Microsoft Sans Serif',24)
 
-$Panel4                          = New-Object system.Windows.Forms.Panel
-$Panel4.height                   = 179
-$Panel4.width                    = 340
-$Panel4.location                 = New-Object System.Drawing.Point(290,55)
-
 $disablewindowsupdate            = New-Object system.Windows.Forms.Button
 $disablewindowsupdate.text       = "Disable Windows Update"
 $disablewindowsupdate.width      = 250
 $disablewindowsupdate.height     = 30
-$disablewindowsupdate.location   = New-Object System.Drawing.Point(5,26)
+$disablewindowsupdate.location   = New-Object System.Drawing.Point($WindowsUpdateLabelLeft,56)
 $disablewindowsupdate.Font       = New-Object System.Drawing.Font('Microsoft Sans Serif',14)
 
 $enablewindowsupdate             = New-Object system.Windows.Forms.Button
 $enablewindowsupdate.text        = "Enable Windows Update"
 $enablewindowsupdate.width       = 250
 $enablewindowsupdate.height      = 30
-$enablewindowsupdate.location    = New-Object System.Drawing.Point(5,66)
+$enablewindowsupdate.location    = New-Object System.Drawing.Point($WindowsUpdateLabelLeft,96)
 $enablewindowsupdate.Font        = New-Object System.Drawing.Font('Microsoft Sans Serif',14)
 
 $smalltaskbaricons               = New-Object system.Windows.Forms.Button
 $smalltaskbaricons.text          = "Use Small Taskbar"
 $smalltaskbaricons.width         = 250
 $smalltaskbaricons.height        = 30
-$smalltaskbaricons.location      = New-Object System.Drawing.Point(5,106)
+$smalltaskbaricons.location      = New-Object System.Drawing.Point($WindowsUpdateLabelLeft,136)
 $smalltaskbaricons.Font          = New-Object System.Drawing.Font('Microsoft Sans Serif',12)
-
-$lightmode                       = New-Object system.Windows.Forms.Button
-$lightmode.text                  = "Light Mode"
-$lightmode.width                 = 204
-$lightmode.height                = 30
-$lightmode.location              = New-Object System.Drawing.Point(4,279)
-$lightmode.Font                  = New-Object System.Drawing.Font('Microsoft Sans Serif',12)
 
 $WindowsCleaner                  = New-Object system.Windows.Forms.Button
 $WindowsCleaner.text             = "Windows Cleaner"
 $WindowsCleaner.width            = 250
 $WindowsCleaner.height           = 30
-$WindowsCleaner.location         = New-Object System.Drawing.Point(5,146)
+$WindowsCleaner.location         = New-Object System.Drawing.Point($WindowsUpdateLabelLeft,176)
 $WindowsCleaner.Font             = New-Object System.Drawing.Font('Microsoft Sans Serif',12)
 
-
-
-$Form.controls.AddRange(@($Panel1,$Panel2,$Label3,$Label15,$Panel4,$PictureBox1,$Label1,$Label4,$Panel3))
-$Panel2.controls.AddRange(@($essentialtweaks,$backgroundapps,$cortana,$actioncenter,$darkmode,$visualfx,$onedrive,$lightmode))
-$Panel4.controls.AddRange(@($disablewindowsupdate,$enablewindowsupdate,$smalltaskbaricons,$Label16,$Label17,$Label18,$Label19,$WindowsCleaner))
+$Form.controls.AddRange(@($RemoveBloat,$disablewindowsupdate,$enablewindowsupdate,$smalltaskbaricons,$Label16,$Label17,$Label18,$Label19,$WindowsCleaner,$Panel1,$Panel2,$Label3,$Label15,$Panel4,$PictureBox1,$Label1,$Label4,$Panel3,$essentialtweaks,$backgroundapps,$cortana,$actioncenter,$darkmode,$visualfx,$onedrive,$lightmode))
 
 $essentialtweaks.Add_Click({
 
@@ -460,96 +457,7 @@ $essentialtweaks.Add_Click({
         New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\FlyoutMenuSettings" -Force
     }
     Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\FlyoutMenuSettings" -Name "ShowHibernateOption" -Type Dword -Value 0
-    write-Host "Trying to remove all bloatware..."
 
-    $Bloatware = @(
-    "Microsoft.3DBuilder"
-    "Microsoft.Microsoft3DViewer"
-    "Microsoft.AppConnector"
-    "Microsoft.BingFinance"
-    "Microsoft.BingNews"
-    "Microsoft.BingSports"
-    "Microsoft.BingTranslator"
-    "Microsoft.BingWeather"
-    "Microsoft.BingFoodAndDrink"
-    "Microsoft.BingHealthAndFitness"
-    "Microsoft.BingTravel"
-    "Microsoft.MinecraftUWP"
-    "Microsoft.GamingServices"
-    "Microsoft.GetHelp"
-    "Microsoft.Getstarted"
-    "Microsoft.Messaging"
-    "Microsoft.Microsoft3DViewer"
-    "Microsoft.MicrosoftSolitaireCollection"
-    "Microsoft.NetworkSpeedTest"
-    "Microsoft.News"
-    "Microsoft.Office.Lens"
-    "Microsoft.Office.Sway"
-    "Microsoft.Office.OneNote"
-    "Microsoft.OneConnect"
-    "Microsoft.People"
-    "Microsoft.Print3D"
-    "Microsoft.SkypeApp"
-    "Microsoft.Wallet"
-    "Microsoft.Whiteboard"
-    "Microsoft.WindowsAlarms"
-    "microsoft.windowscommunicationsapps"
-    "Microsoft.WindowsFeedbackHub"
-    "Microsoft.WindowsMaps"
-    "Microsoft.WindowsPhone"
-    "Microsoft.WindowsSoundRecorder"
-    "Microsoft.XboxApp"
-    "Microsoft.ConnectivityStore"
-    "Microsoft.CommsPhone"
-    "Microsoft.ScreenSketch"
-    "Microsoft.Xbox.TCUI"
-    "Microsoft.XboxGameOverlay"
-    "Microsoft.XboxGameCallableUI"
-    "Microsoft.XboxSpeechToTextOverlay"
-    "Microsoft.MixedReality.Portal"
-    "Microsoft.XboxIdentityProvider"
-    "Microsoft.ZuneMusic"
-    "Microsoft.ZuneVideo"
-    "Microsoft.YourPhone"
-    "Microsoft.Getstarted"
-    "Microsoft.MicrosoftOfficeHub"
-    "*EclipseManager*"
-    "*ActiproSoftwareLLC*"
-    "*AdobeSystemsIncorporated.AdobePhotoshopExpress*"
-    "*Duolingo-LearnLanguagesforFree*"
-    "*PandoraMediaInc*"
-    "*CandyCrush*"
-    "*BubbleWitch3Saga*"
-    "*Wunderlist*"
-    "*Flipboard*"
-    "*Twitter*"
-    "*Facebook*"
-    "*Royal Revolt*"
-    "*Sway*"
-    "*Speed Test*"
-    "*Dolby*"
-    "*Viber*"
-    "*ACGMediaPlayer*"
-    "*Netflix*"
-    "*OneCalendar*"
-    "*LinkedInforWindows*"
-    "*HiddenCityMysteryofShadows*"
-    "*Hulu*"
-    "*HiddenCity*"
-    "*AdobePhotoshopExpress*"
-    "*Microsoft.Advertising.Xaml*"
-    "*Microsoft.MSPaint*"
-    "*Microsoft.MicrosoftStickyNotes*"
-    "*Microsoft.Windows.Photos*"
-    "*Microsoft.WindowsCalculator*"
-    "*Microsoft.WindowsStore*"
-    )
-
-
-    foreach ($Bloat in $Bloatware) {
-        Get-AppxPackage -Name $Bloat| Remove-AppxPackage
-        Get-AppxProvisionedPackage -Online | Where-Object DisplayName -like $Bloat | Remove-AppxProvisionedPackage -Online
-    }
     if (!(Test-Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced")){
         New-Item -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Force | Out-Null
     }
@@ -928,12 +836,15 @@ $disablewindowsupdate.Add_Click({
     Stop-Service -DisplayName "Windows Update Medic Service" -Force -PassThru
     Disable-ScheduledTask -TaskName "\Microsoft\Windows\WindowsUpdate\Scheduled Start" | Out-Null
     Disable-ScheduledTask -TaskName "\Microsoft\Windows\WaaSMedic\PerformRemediation" | Out-Null
-    #Disable-ScheduledTask -TaskName "\Microsoft\Windows\UpdateOrchestrator\Report policies" | Out-Null
-    #Disable-ScheduledTask -TaskName "\Microsoft\Windows\UpdateOrchestrator\Schedule Scan" | Out-Null
-    #Disable-ScheduledTask -TaskName "\Microsoft\Windows\UpdateOrchestrator\Schedule Scan Static Task" | Out-Null
-    #Disable-ScheduledTask -TaskName "\Microsoft\Windows\UpdateOrchestrator\UpdateModelTask" | Out-Null
-    #Disable-ScheduledTask -TaskName "\Microsoft\Windows\UpdateOrchestrator\USO_UxBroker" | Out-Null
-
+    <#
+     Those tasks require extra premissions
+     Run this script with NSudo to disable those services!
+        Disable-ScheduledTask -TaskName "\Microsoft\Windows\UpdateOrchestrator\Report policies" | Out-Null
+        Disable-ScheduledTask -TaskName "\Microsoft\Windows\UpdateOrchestrator\Schedule Scan" | Out-Null
+        Disable-ScheduledTask -TaskName "\Microsoft\Windows\UpdateOrchestrator\Schedule Scan Static Task" | Out-Null
+        Disable-ScheduledTask -TaskName "\Microsoft\Windows\UpdateOrchestrator\UpdateModelTask" | Out-Null
+        Disable-ScheduledTask -TaskName "\Microsoft\Windows\UpdateOrchestrator\USO_UxBroker" | Out-Null
+    #>
     if (!(Test-Path "HKLM:\Software\Microsoft\WindowsUpdate\UX\Settings")){
         New-Item -Path "HKLM:\Software\Microsoft\WindowsUpdate\UX\Settings" -Force | Out-Null
     }
@@ -949,11 +860,16 @@ $enablewindowsupdate.Add_Click({
     Start-Service -DisplayName "Windows Update Medic Service" -PassThru -ErrorAction SilentlyContinue
     Enable-ScheduledTask -TaskName "\Microsoft\Windows\WindowsUpdate\Scheduled Start" | Out-Null
     Enable-ScheduledTask -TaskName "\Microsoft\Windows\WaaSMedic\PerformRemediation" | Out-Null
-    #Enable-ScheduledTask -TaskName "\Microsoft\Windows\UpdateOrchestrator\Report policies" | Out-Null
-    #Enable-ScheduledTask -TaskName "\Microsoft\Windows\UpdateOrchestrator\Schedule Scan" | Out-Null
-    #Enable-ScheduledTask -TaskName "\Microsoft\Windows\UpdateOrchestrator\Schedule Scan Static Task" | Out-Null
-    #Enable-ScheduledTask -TaskName "\Microsoft\Windows\UpdateOrchestrator\UpdateModelTask" | Out-Null
-    #Enable-ScheduledTask -TaskName "\Microsoft\Windows\UpdateOrchestrator\USO_UxBroker" | Out-Null
+
+    <#
+     Those tasks require extra premissions
+     Run this script with NSudo to disable those services!
+        Enable-ScheduledTask -TaskName "\Microsoft\Windows\UpdateOrchestrator\Report policies" | Out-Null
+        Enable-ScheduledTask -TaskName "\Microsoft\Windows\UpdateOrchestrator\Schedule Scan" | Out-Null
+        Enable-ScheduledTask -TaskName "\Microsoft\Windows\UpdateOrchestrator\Schedule Scan Static Task" | Out-Null
+        Enable-ScheduledTask -TaskName "\Microsoft\Windows\UpdateOrchestrator\UpdateModelTask" | Out-Null
+        Enable-ScheduledTask -TaskName "\Microsoft\Windows\UpdateOrchestrator\USO_UxBroker" | Out-Null
+    #>
 
     if (!(Test-Path "HKLM:\Software\Microsoft\WindowsUpdate\UX\Settings")){
         New-Item -Path "HKLM:\Software\Microsoft\WindowsUpdate\UX\Settings" -Force | Out-Null
@@ -975,8 +891,14 @@ $smalltaskbaricons.Add_Click({
 })
 
 $WindowsCleaner.Add_Click({
+
+    <#
+    "Windows Cleaner" is my new project! Its like CClneaer but inside batch file
+    script below will download script and make it into bat file
+    #>
+
     $URL = "https://raw.githubusercontent.com/teeotsa/windows-cleaner/main/Cleaner.bat"
-    $CleanerFile = Invoke-WebRequest $URL
+    $CleanerFile = Invoke-WebRequest $URL -ErrorAction SilentlyContinue | Out-Null
     $Username = $env:UserName
     $File = "C:\Users\$Username\Desktop\Cleaner.bat"
     #To test if this method works!
@@ -986,9 +908,111 @@ $WindowsCleaner.Add_Click({
     if (!(Get-Item "C:\Users\$Username\Desktop\Cleaner.bat")){
         write-Host "Something went wrong!"
     } else {
-        Start-Process "C:\Users\$Username\Desktop\Cleaner.bat" -Verb RunAs
+        Start-Process "C:\Users\$Username\Desktop\Cleaner.bat" -Verb RunAs -ErrorAction SilentlyContinue | Out-Null
         write-Host "Destination of the script : C:\Users\$Username\Desktop\Cleaner.bat"
     }
+})
+
+$RemoveBloat.Add_Click({
+
+    if(Start-Service -Name "AppXSvc" -PassThru){
+      
+        $BloatwareList = @(
+        "Microsoft.3DBuilder"
+        "Microsoft.Microsoft3DViewer"
+        "Microsoft.AppConnector"
+        "Microsoft.BingFinance"
+        "Microsoft.BingNews"
+        "Microsoft.BingSports"
+        "Microsoft.BingTranslator"
+        "Microsoft.BingWeather"
+        "Microsoft.BingFoodAndDrink"
+        "Microsoft.BingHealthAndFitness"
+        "Microsoft.BingTravel"
+        "Microsoft.MinecraftUWP"
+        "Microsoft.GamingServices"
+        "Microsoft.GetHelp"
+        "Microsoft.Getstarted"
+        "Microsoft.Messaging"
+        "Microsoft.Microsoft3DViewer"
+        "Microsoft.MicrosoftSolitaireCollection"
+        "Microsoft.NetworkSpeedTest"
+        "Microsoft.News"
+        "Microsoft.Office.Lens"
+        "Microsoft.Office.Sway"
+        "Microsoft.Office.OneNote"
+        "Microsoft.OneConnect"
+        "Microsoft.People"
+        "Microsoft.Print3D"
+        "Microsoft.SkypeApp"
+        "Microsoft.Wallet"
+        "Microsoft.Whiteboard"
+        "Microsoft.WindowsAlarms"
+        "microsoft.windowscommunicationsapps"
+        "Microsoft.WindowsFeedbackHub"
+        "Microsoft.WindowsMaps"
+        "Microsoft.WindowsPhone"
+        "Microsoft.WindowsSoundRecorder"
+        "Microsoft.XboxApp"
+        "Microsoft.ConnectivityStore"
+        "Microsoft.CommsPhone"
+        "Microsoft.ScreenSketch"
+        "Microsoft.Xbox.TCUI"
+        "Microsoft.XboxGameOverlay"
+        "Microsoft.XboxGameCallableUI"
+        "Microsoft.XboxSpeechToTextOverlay"
+        "Microsoft.MixedReality.Portal"
+        "Microsoft.XboxIdentityProvider"
+        "Microsoft.ZuneMusic"
+        "Microsoft.ZuneVideo"
+        "Microsoft.YourPhone"
+        "Microsoft.Getstarted"
+        "Microsoft.MicrosoftOfficeHub"
+        "*EclipseManager*"
+        "*ActiproSoftwareLLC*"
+        "*AdobeSystemsIncorporated.AdobePhotoshopExpress*"
+        "*Duolingo-LearnLanguagesforFree*"
+        "*PandoraMediaInc*"
+        "*CandyCrush*"
+        "*BubbleWitch3Saga*"
+        "*Wunderlist*"
+        "*Flipboard*"
+        "*Twitter*"
+        "*Facebook*"
+        "*Royal Revolt*"
+        "*Sway*"
+        "*Speed Test*"
+        "*Dolby*"
+        "*Viber*"
+        "*ACGMediaPlayer*"
+        "*Netflix*"
+        "*OneCalendar*"
+        "*LinkedInforWindows*"
+        "*HiddenCityMysteryofShadows*"
+        "*Hulu*"
+        "*HiddenCity*"
+        "*AdobePhotoshopExpress*"
+        "*Microsoft.Advertising.Xaml*"
+        "*Microsoft.MSPaint*"
+        "*Microsoft.MicrosoftStickyNotes*"
+        "*Microsoft.Windows.Photos*"
+        "*Microsoft.WindowsCalculator*"
+        "*Microsoft.WindowsStore*"
+        )
+
+        foreach ($Bloat in $BloatwareList) {
+            Get-AppxPackage -Name $Bloat| Remove-AppxPackage
+            Get-AppxProvisionedPackage -Online | Where-Object DisplayName -like $Bloat | Remove-AppxProvisionedPackage -Online
+
+            write-Host "Trying to remove $Bloat"
+        }
+
+        write-Host "Bloatware uninstalled!"
+        
+    } else {
+        write-Host "Script is not able to start 'AppXSvc' service"
+    }
+
 })
 
 [void]$Form.ShowDialog()
