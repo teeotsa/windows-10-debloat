@@ -1,6 +1,13 @@
 Add-Type -AssemblyName System.Windows.Forms
 [System.Windows.Forms.Application]::EnableVisualStyles()
 
+$WindowsVersion = [System.Environment]::OSVersion.Version.Major
+if (!($WindowsVersion -eq "10")){
+    write-Host "This script is designed to run only on Windows 10. You can always comment out this but its not recommended. Script will close in 5 seconds!"
+    timeout 5
+    exit
+}
+
 $ErrorActionPreference = 'SilentlyContinue'
 $wshell = New-Object -ComObject Wscript.Shell
 $Button = [System.Windows.MessageBoxButton]::YesNoCancel
@@ -13,18 +20,18 @@ If (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]:
 Clear-Host
 
 #Some Form settings
-$WindowsUpdateLabelLeft = 295
+$MainFormName = "Windows 10 Debloater"
+$OtherTweaksLeft = 295
 $SystemTweaksLeft = 40
 
 $Form                            = New-Object system.Windows.Forms.Form
-$Form.ClientSize                 = New-Object System.Drawing.Point(1050,700)
-$Form.text                       = "Windows 10 Debloater"
+$Form.text                       = $MainFormName
 $Form.StartPosition              = "CenterScreen"
 $Form.TopMost                    = $false
 $Form.BackColor                  = [System.Drawing.ColorTranslator]::FromHtml("#b8b8b8")
 $Form.AutoScaleDimensions        = '192, 192'
 $Form.AutoSize                   = $False
-$Form.ClientSize                 = '575, 450'
+$Form.ClientSize                 = '575, 500'
 $Form.FormBorderStyle            = 'Sizable'
 
 $Label3                          = New-Object system.Windows.Forms.Label
@@ -32,7 +39,7 @@ $Label3.text                     = "System Tweaks"
 $Label3.AutoSize                 = $true
 $Label3.width                    = 230
 $Label3.height                   = 25
-$Label3.location                 = New-Object System.Drawing.Point(35,12)
+$Label3.location                 = New-Object System.Drawing.Point(25,12)
 $Label3.Font                     = New-Object System.Drawing.Font('Microsoft Sans Serif',24)
 
 $essentialtweaks                 = New-Object system.Windows.Forms.Button
@@ -98,43 +105,64 @@ $RemoveBloat.height              = 30
 $RemoveBloat.location            = New-Object System.Drawing.Point($SystemTweaksLeft,376)
 $RemoveBloat.Font                = New-Object System.Drawing.Font('Microsoft Sans Serif',12)
 
+$UninstallEdge                   = New-Object system.Windows.Forms.Button
+$UninstallEdge.text              = "Uninstall Edge"
+$UninstallEdge.width             = 204
+$UninstallEdge.height            = 30
+$UninstallEdge.location          = New-Object System.Drawing.Point($SystemTweaksLeft,416)
+$UninstallEdge.Font              = New-Object System.Drawing.Font('Microsoft Sans Serif',12)
+
 $Label15                         = New-Object system.Windows.Forms.Label
-$Label15.text                    = "Windows Update"
+$Label15.text                    = "Other Tweaks"
 $Label15.AutoSize                = $true
 $Label15.width                   = 25
 $Label15.height                  = 10
-$Label15.location                = New-Object System.Drawing.Point(290,11)
+$Label15.location                = New-Object System.Drawing.Point(315,11)
 $Label15.Font                    = New-Object System.Drawing.Font('Microsoft Sans Serif',24)
 
 $disablewindowsupdate            = New-Object system.Windows.Forms.Button
 $disablewindowsupdate.text       = "Disable Windows Update"
 $disablewindowsupdate.width      = 250
 $disablewindowsupdate.height     = 30
-$disablewindowsupdate.location   = New-Object System.Drawing.Point($WindowsUpdateLabelLeft,56)
+$disablewindowsupdate.location   = New-Object System.Drawing.Point($OtherTweaksLeft,56)
 $disablewindowsupdate.Font       = New-Object System.Drawing.Font('Microsoft Sans Serif',14)
 
 $enablewindowsupdate             = New-Object system.Windows.Forms.Button
 $enablewindowsupdate.text        = "Enable Windows Update"
 $enablewindowsupdate.width       = 250
 $enablewindowsupdate.height      = 30
-$enablewindowsupdate.location    = New-Object System.Drawing.Point($WindowsUpdateLabelLeft,96)
+$enablewindowsupdate.location    = New-Object System.Drawing.Point($OtherTweaksLeft,96)
 $enablewindowsupdate.Font        = New-Object System.Drawing.Font('Microsoft Sans Serif',14)
 
 $smalltaskbaricons               = New-Object system.Windows.Forms.Button
 $smalltaskbaricons.text          = "Use Small Taskbar"
 $smalltaskbaricons.width         = 250
 $smalltaskbaricons.height        = 30
-$smalltaskbaricons.location      = New-Object System.Drawing.Point($WindowsUpdateLabelLeft,136)
+$smalltaskbaricons.location      = New-Object System.Drawing.Point($OtherTweaksLeft,136)
 $smalltaskbaricons.Font          = New-Object System.Drawing.Font('Microsoft Sans Serif',12)
 
 $WindowsCleaner                  = New-Object system.Windows.Forms.Button
 $WindowsCleaner.text             = "Windows Cleaner"
 $WindowsCleaner.width            = 250
 $WindowsCleaner.height           = 30
-$WindowsCleaner.location         = New-Object System.Drawing.Point($WindowsUpdateLabelLeft,176)
+$WindowsCleaner.location         = New-Object System.Drawing.Point($OtherTweaksLeft,176)
 $WindowsCleaner.Font             = New-Object System.Drawing.Font('Microsoft Sans Serif',12)
 
-$Form.controls.AddRange(@($RemoveBloat,$disablewindowsupdate,$enablewindowsupdate,$smalltaskbaricons,$Label16,$Label17,$Label18,$Label19,$WindowsCleaner,$Panel1,$Panel2,$Label3,$Label15,$Panel4,$PictureBox1,$Label1,$Label4,$Panel3,$essentialtweaks,$backgroundapps,$cortana,$actioncenter,$darkmode,$visualfx,$onedrive,$lightmode))
+$AdminAccount                    = new-object System.Windows.Forms.checkbox
+$AdminAccount.Location           = new-object System.Drawing.Size(42,455)
+$AdminAccount.Size               = new-object System.Drawing.Size(100,15)
+$AdminAccount.Text               = "Admin Account"
+
+#Check if Administrator account is enabled
+$AdminAcc = Get-LocalUser -Name "Administrator"
+$AdminEnabled = $AdminAcc.Enabled
+if ($AdminEnabled -eq 'False'){
+    $AdminAccount.Checked = $true
+} elseif ($AdminEnabled -eq 'True'){
+    $AdminAccount.Checked = $false
+}
+
+$Form.controls.AddRange(@($UninstallEdge,$AdminAccount,$RemoveBloat,$disablewindowsupdate,$enablewindowsupdate,$smalltaskbaricons,$Label16,$Label17,$Label18,$Label19,$WindowsCleaner,$Panel1,$Panel2,$Label3,$Label15,$Panel4,$PictureBox1,$Label1,$Label4,$Panel3,$essentialtweaks,$backgroundapps,$cortana,$actioncenter,$darkmode,$visualfx,$onedrive,$lightmode))
 
 $essentialtweaks.Add_Click({
 
@@ -280,6 +308,19 @@ $essentialtweaks.Add_Click({
 	Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control" -Name "SvcHostSplitThresholdInKB" -Type DWord -Value 4194304
     Write-Host "Disable News and Interests"
     Set-ItemProperty -Path "HKCU:\SOFTWARE\Policies\Microsoft\Windows\Windows Feeds" -Name "EnableFeeds" -Type DWord -Value 0
+    #Remove news and interest from taskbar
+    Set-ItemProperty -Path  "HKCU:\Software\Microsoft\Windows\CurrentVersion\Feeds" -Name "ShellFeedsTaskbarViewMode" -Type DWord -Value 2
+    #Remove meet now button from taskbar
+    If (!(Test-Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer")) {
+        New-Item -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" -Force | Out-Null
+    }
+    Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" -Name "HideSCAMeetNow" -Type DWord -Value 1
+    Write-Host "Removing AutoLogger file and restricting directory..."
+    $autoLoggerDir = "$env:PROGRAMDATA\Microsoft\Diagnosis\ETLLogs\AutoLogger"
+    If (Test-Path "$autoLoggerDir\AutoLogger-Diagtrack-Listener.etl") {
+        Remove-Item "$autoLoggerDir\AutoLogger-Diagtrack-Listener.etl"
+    }
+    icacls $autoLoggerDir /deny SYSTEM:`(OI`)`(CI`)F | Out-Null
     Write-Host "Disabling some services and scheduled tasks"
 
     $Services = @(
@@ -445,8 +486,6 @@ $essentialtweaks.Add_Click({
     Disable-ScheduledTask -TaskName "\Microsoft\Windows\Bluetooth\UninstallDeviceTask" | Out-Null
     Disable-ScheduledTask -TaskName "\Microsoft\Windows\Application Experience\ProgramDataUpdater" | Out-Null
     Disable-ScheduledTask -TaskName "\Microsoft\Windows\Application Experience\StartupAppTask" | Out-Null
-    Disable-ScheduledTask -TaskName "\MicrosoftEdgeUpdateTaskMachineUA" | Out-Null
-    Disable-ScheduledTask -TaskName "\MicrosoftEdgeUpdateTaskMachineCore" | Out-Null
 
     write-Host "Trying to disable Hibernation..."
     if (!(Test-Path "HKLM:\System\CurrentControlSet\Control\Session Manager\Power")) {
@@ -573,7 +612,10 @@ $essentialtweaks.Add_Click({
         Set-ItemProperty -Path $_.PsPath -Name "Enabled" -Type DWord -Value 0
         Set-ItemProperty -Path $_.PsPath -Name "LastNotificationAddedTime" -Type QWord -Value "0"
     }    
-
+    if (!(Test-Path "HKCU:\SOFTWARE\Policies\Microsoft\Windows\CurrentVersion\PushNotifications")){
+        New-Item -Path "HKCU:\SOFTWARE\Policies\Microsoft\Windows\CurrentVersion\PushNotifications" -Force | Out-Null
+    }
+    Set-ItemProperty -Path "HKCU:\SOFTWARE\Policies\Microsoft\Windows\CurrentVersion\PushNotifications" -Name "NoTileApplicationNotification" -Type DWord -Value 1
     Write-Host "Disable NumLock after startup..."
     Set-ItemProperty -Path "HKU:\.DEFAULT\Control Panel\Keyboard" -Name "InitialKeyboardIndicators" -Type DWord -Value 0
     Add-Type -AssemblyName System.Windows.Forms
@@ -581,7 +623,6 @@ $essentialtweaks.Add_Click({
         $wsh = New-Object -ComObject WScript.Shell
         $wsh.SendKeys('{NUMLOCK}')
     }
-    
     if (!(Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\WindowsStore")){
         New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\WindowsStore" -Force | Out-Null
     }
@@ -594,7 +635,6 @@ $essentialtweaks.Add_Click({
         New-Path -Path "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\GameDVR" -Force | Out-Null
     }
     Set-ItemProperty -Path "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\GameDVR" -Name "AllowGameDVR" -Type DWord -Value 0
-
     if (!(Test-Path "HKCU:\SOFTWARE\Policies\Microsoft\Windows\Explorer")){
         New-Item -Path "HKCU:\SOFTWARE\Policies\Microsoft\Windows\Explorer" -Force | Out-Null
     }
@@ -606,7 +646,9 @@ $essentialtweaks.Add_Click({
     }
     Set-ItemProperty -Path "HKLM:\Software\Microsoft\Windows NT\CurrentVersion\MTCUVC" -Name "EnableMtcUvc" -Type DWord -Value 0
     write-Host "Legacy Volume control enabled"
-
+    if (!(Test-Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager")){
+        Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" -Name "SilentInstalledAppsEnabled" -Type DWord -Value 0
+    }
     Start-Sleep -Seconds 1
     Stop-Process -Name explorer -Force -PassThru
     Write-Host "Tweaks are done!"
@@ -830,10 +872,12 @@ $lightmode.Add_Click({
 })
 
 $disablewindowsupdate.Add_Click({
-    Get-Service -DisplayName "Windows Update" | Set-Service -StartupType Disabled -ErrorAction SilentlyContinue
-    Get-Service -DisplayName "Windows Update Medic Service" | Set-Service -StartupType Disabled -ErrorAction SilentlyContinue
-    Stop-Service -DisplayName "Windows Update" -Force -PassThru
-    Stop-Service -DisplayName "Windows Update Medic Service" -Force -PassThru
+    Get-Service -Name "wuauserv" | Set-Service -StartupType Disabled -ErrorAction SilentlyContinue
+    Get-Service -Name "WaaSMedicSvc" | Set-Service -StartupType Disabled -ErrorAction SilentlyContinue
+    Get-Service -Name "UsoSvc" | Set-Service -StartupType Disabled -ErrorAction SilentlyContinue
+    Stop-Service -Name "wuauserv" -PassThru -ErrorAction SilentlyContinue
+    Stop-Service -Name "WaaSMedicSvc" -PassThru -ErrorAction SilentlyContinue
+    Stop-Service -Name "UsoSvc" -PassThru -ErrorAction SilentlyContinue
     Disable-ScheduledTask -TaskName "\Microsoft\Windows\WindowsUpdate\Scheduled Start" | Out-Null
     Disable-ScheduledTask -TaskName "\Microsoft\Windows\WaaSMedic\PerformRemediation" | Out-Null
     <#
@@ -854,10 +898,12 @@ $disablewindowsupdate.Add_Click({
 })
 
 $enablewindowsupdate.Add_Click({
-    Get-Service -DisplayName "Windows Update" | Set-Service -StartupType Automatic -ErrorAction SilentlyContinue
-    Get-Service -DisplayName "Windows Update Medic Service" | Set-Service -StartupType Automatic -ErrorAction SilentlyContinue
-    Start-Service -DisplayName "Windows Update" -PassThru -ErrorAction SilentlyContinue
-    Start-Service -DisplayName "Windows Update Medic Service" -PassThru -ErrorAction SilentlyContinue
+    Get-Service -Name "wuauserv" | Set-Service -StartupType Manual -ErrorAction SilentlyContinue
+    Get-Service -Name "WaaSMedicSvc" | Set-Service -StartupType Manual -ErrorAction SilentlyContinue
+    Get-Service -Name "UsoSvc" | Set-Service -StartupType Manual -ErrorAction SilentlyContinue
+    Start-Service -Name "wuauserv" -PassThru -ErrorAction SilentlyContinue
+    Start-Service -Name "WaaSMedicSvc" -PassThru -ErrorAction SilentlyContinue
+    Start-Service -Name "UsoSvc" -PassThru -ErrorAction SilentlyContinue
     Enable-ScheduledTask -TaskName "\Microsoft\Windows\WindowsUpdate\Scheduled Start" | Out-Null
     Enable-ScheduledTask -TaskName "\Microsoft\Windows\WaaSMedic\PerformRemediation" | Out-Null
 
@@ -1012,6 +1058,99 @@ $RemoveBloat.Add_Click({
     } else {
         write-Host "Script is not able to start 'AppXSvc' service"
     }
+
+})
+
+$AdminAccount.Add_CheckStateChanged({
+
+    $Chk = $AdminAccount
+    if ($AdminAccount.Checked){
+        write-Host "Administrator account is enabled!"
+        Get-LocalUser -Name "Administrator" | Enable-LocalUser
+    } else {
+        write-Host "Administrator account is disabled!"
+        Get-LocalUser -Name "Administrator" | Disable-LocalUser
+    }
+
+})
+
+$UninstallEdge.Add_Click({
+
+#C:\Program Files (x86)\Microsoft\Edge\Application\84.0.522.63\Installer
+#.\setup.exe --uninstall --system-level --verbose-logging --force-uninstall
+
+$microsoftpath = "C:\Program Files (x86)\Microsoft"
+$edgepath = "C:\Program Files (x86)\Microsoft\Edge\Application\*.*.*.*\Installer"
+$arguments = "--uninstall --system-level --verbose-logging --force-uninstall"
+
+if(Test-Path "C:\Program Files (x86)\Microsoft\Edge\Application"){
+
+    write-Host "Uninstalling 'Microsoft Edge'..."
+    Start-Process -FilePath "$edgepath\setup.exe" -ArgumentList "$arguments" -Verb RunAs -Wait
+    Disable-ScheduledTask -TaskName "\MicrosoftEdgeUpdateTaskMachineUA" | Out-Null
+    Disable-ScheduledTask -TaskName "\MicrosoftEdgeUpdateTaskMachineCore" | Out-Null
+    $edgeservices = @(
+        "edgeupdatem"
+        "edgeupdate"
+        "MicrosoftEdgeElevationService"
+    )
+    foreach($edge in $edgeservices){
+        Get-Service $edge | Set-Service -StartupType Disabled -PassThru -ErrorAction SilentlyContinue
+    }
+    write-Host "Clearing Edge regristry keys..."
+    if(!(Test-Path "HKLM:\SOFTWARE\Microsoft")){
+        New-Item -Path "HKLM:\SOFTWARE\Microsoft" -Force | Out-Null
+    }
+    Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft" -Name "DoNotUpdateToEdgeWithChromium" -Type DWord -Value 1
+    if(Test-Path "HKCU:\SOFTWARE\Microsoft\Edge"){
+        Remove-Item -Path "HKCU:\SOFTWARE\Microsoft\Edge" -Force -ErrorAction SilentlyContinue | Out-Null
+    }
+    if(Test-Path "HKCU:\SOFTWARE\Microsoft\EdgeUpdate"){
+        Remove-Item -Path "HKCU:\SOFTWARE\Microsoft\EdgeUpdate" -Force -ErrorAction SilentlyContinue | Out-Null
+    }
+    if(Test-Path "HKLM:\SOFTWARE\WOW6432Node\Microsoft\Edge"){
+        Remove-Item -Path "HKLM:\SOFTWARE\WOW6432Node\Microsoft\Edge" -Force -ErrorAction SilentlyContinue | Out-Null
+    }
+    if(Test-Path "HKLM:\SOFTWARE\WOW6432Node\Microsoft\EdgeUpdate"){
+        Remove-Item -Path "HKLM:\SOFTWARE\WOW6432Node\Microsoft\EdgeUpdate" -Force -ErrorAction SilentlyContinue | Out-Null
+    }
+    if(!(Test-Path "HKCR:\")){
+        New-PSDrive -PSProvider registry -Root HKEY_CLASSES_ROOT -Name HKCR | Out-Null
+    }
+    Remove-Item -Path "Microsoft.PowerShell.Core\Registry::HKEY_CLASSES_ROOT\*MicrosoftEdge*" -Force | Out-Null
+    Remove-Item -Path "Microsoft.PowerShell.Core\Registry::HKEY_CLASSES_ROOT\*microsoft-edge*" -Force | Out-Null
+    Remove-Item -Path "Microsoft.PowerShell.Core\Registry::HKEY_CLASSES_ROOT\*edge*" -Force | Out-Null
+
+    write-Host "Removing all 'Microsoft Edge' files!"
+
+    $edgechilditems = Get-ChildItem -Path 'C:\Program Files (x86)\Microsoft\Edge'
+    foreach($item in $edgechilditems){
+        Remove-Item -Path $item.fullname -Force -ErrorAction SilentlyContinue | Out-Null
+    }
+    $edgeupdatechilditems = Get-ChildItem -Path 'C:\Program Files (x86)\Microsoft\EdgeUpdate'
+    foreach($updateitem in $edgeupdatechilditems){
+        Remove-Item -Path $updateitem.fullname -Force -Recurse -ErrorAction SilentlyContinue | Out-Null
+    }
+    $edgetempchilditems = Get-ChildItem -Path 'C:\Program Files (x86)\Microsoft\Temp'
+    foreach($temp in $edgetempchilditems){
+        Remove-Item -Path $temp.fullname -Force -Recurse -ErrorAction SilentlyContinue | Out-Null
+    }
+
+    #Remove Edge Services
+    if (Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\edgeupdate"){
+        Remove-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Services\edgeupdate" -Force | Out-Null
+    }
+    if (Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\edgeupdatem"){
+        Remove-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Services\edgeupdatem" -Force | Out-Null
+    }
+    
+    write-Host "'Microsoft Edge' is now removed!"
+
+} else {
+
+    write-Host "'Microsoft Edge' is not installed!"
+
+}
 
 })
 
