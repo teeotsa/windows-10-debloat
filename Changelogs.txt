@@ -1,0 +1,5 @@
+- August 29 2021
+
+*Added "Take Ownership" button! (Adds "Take Ownership" to context menu)
+*Tweaked "Remove Bloatware" script. 
+*Script will now remove some bloatware registry keys after uninstallation of bloatware
