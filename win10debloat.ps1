@@ -1,6 +1,6 @@
 Add-Type -AssemblyName System.Windows.Forms
 [System.Windows.Forms.Application]::EnableVisualStyles()
-
+<#
 $WindowsVersion = [System.Environment]::OSVersion.Version.Major
 if (!($WindowsVersion -eq "10")){
     write-Host "This script is designed to run only on Windows 10. You can always comment out this but its not recommended. Script will close in 5 seconds!"
@@ -16,7 +16,7 @@ If (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]:
 	Start-Process powershell.exe "-NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`"" -Verb RunAs
 	Exit
 }
-
+#>
 Clear-Host
 
 #Some Form settings
@@ -993,9 +993,8 @@ $RemoveBloat.Add_Click({
 
     $Holo = "HKCU:\Software\Microsoft\Windows\CurrentVersion\Holographic"    
     If (Test-Path $Holo) {
-        Set-ItemProperty $Holo  FirstRunSucceeded -Value 0 
+        Set-ItemProperty -Path $Holo -Name FirstRunSucceeded -Value -Type DWord -Value 0 
     }
-
     if(Start-Service -Name "AppXSvc" -PassThru){
       
         $BloatwareList = @(
@@ -1127,9 +1126,40 @@ $RemoveBloat.Add_Click({
         #This writes the output of each key it is removing and also removes the keys listed above.
         ForEach ($Key in $Keys) {
             Write-Output "Removing $Key from registry"
-            Remove-Item $Key -Recurse -Force
+            Remove-Item $Key -Recurse -Force -ErrorAction SilentlyContinue | Out-Null
         }
 
+
+        #function to remove/delete metro applications permanently by deleting files
+        function RemovePermanently{
+        
+            $WindowsAppsFolder = "$env:ProgramFiles\WindowsApps"
+            if(Test-Path $WindowsAppsFolder){
+                $Apps = Get-ChildItem -Path $WindowsAppsFolder | ForEach-Object{
+                takeown /f $_.FullName
+                $ApplicationFullName = $_.FullName
+                write-Host "Trying to remove '$ApplicationFullName'"
+                Remove-Item -Path $_.FullName -Force -Recurse -ErrorAction SilentlyContinue | Out-Null
+                }
+            } else {
+                Write-Warning "'$WindowsAppsFolder' not found!"
+            }
+
+        }
+
+        function Ask{
+            Clear-Host
+            Write-Warning "Do you want to remove apps permanently? There is noway to reinstall apps then."
+            $Answer = Read-Host "Answer with Y.N"
+            if($Answer -eq "y"){
+                RemovePermanently
+            } elseif ($Answer -eq "n"){
+                #write-Host "Okay, application files will remain untouched!"
+            } else {
+                Ask
+            }
+        }
+        Ask
         write-Host "Bloatware uninstalled!"
         
     } else {
@@ -1172,7 +1202,7 @@ if(Test-Path "C:\Program Files (x86)\Microsoft\Edge\Application"){
         "MicrosoftEdgeElevationService"
     )
     foreach($edge in $edgeservices){
-        Get-Service $edge | Set-Service -StartupType Disabled -PassThru -ErrorAction SilentlyContinue
+        Get-Service $edge | Set-Service -StartupType Disabled -PassThru -ErrorAction SilentlyContinue | Out-Null
     }
     write-Host "Clearing Edge regristry keys..."
     if(!(Test-Path "HKLM:\SOFTWARE\Microsoft")){
@@ -1264,12 +1294,13 @@ $TakeOwnership.Add_Click({
     }
     
     function RemoveTakeOwnershipContextMenu{
-    
+
+        Clear-Host
         write-Host "This might take some time to remove! Please wait..."
-        if((Test-Path -LiteralPath "HKLM:\SOFTWARE\Classes\*\shell\TakeOwnership") -eq $true){
+        if(Test-Path -LiteralPath "HKLM:\SOFTWARE\Classes\*\shell\TakeOwnership"){
             Remove-Item -Path "Microsoft.PowerShell.Core\Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Classes\*\shell\TakeOwnership" -Force -Recurse -ErrorAction SilentlyContinue | Out-Null
         }
-        if((Test-Path -LiteralPath "HKLM:\SOFTWARE\Classes\Directory\shell\TakeOwnership") -eq $true){
+        if(Test-Path -LiteralPath "HKLM:\SOFTWARE\Classes\Directory\shell\TakeOwnership"){
             Remove-Item -Path "Microsoft.PowerShell.Core\Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Classes\Directory\shell\TakeOwnership" -Force -Recurse -ErrorAction SilentlyContinue | Out-Null
         }
         write-Host "'Take Ownership' context menu is gone!"
