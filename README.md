@@ -1,5 +1,9 @@
 # Windows 10 Debloater
 
+Note: Script should work with Windows 11 aswell but you have to comment out following lines : 
+![comment out](https://user-images.githubusercontent.com/78772453/131884458-0b623b2e-999b-4b72-9831-6a19530d12f0.PNG)
+
+
 This script is based of Chris Titus Tech's script! Original : https://github.com/ChrisTitusTech/win10script
  
 Be careful, there is noway to revert back once you pressed "System Tweaks" button and! Script **wont** make any restore points and **disables** all backup services. You can always make backup and restore point BEFORE running my script!
