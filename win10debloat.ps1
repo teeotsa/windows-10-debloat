@@ -1,6 +1,6 @@
 Add-Type -AssemblyName System.Windows.Forms
 [System.Windows.Forms.Application]::EnableVisualStyles()
-<#
+
 $WindowsVersion = [System.Environment]::OSVersion.Version.Major
 if (!($WindowsVersion -eq "10")){
     write-Host "This script is designed to run only on Windows 10. You can always comment out this but its not recommended. Script will close in 5 seconds!"
@@ -16,7 +16,7 @@ If (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]:
 	Start-Process powershell.exe "-NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`"" -Verb RunAs
 	Exit
 }
-#>
+
 Clear-Host
 
 #Some Form settings
