@@ -21,7 +21,9 @@ This script will remove following:
 - *Disable Scheduled Tasks*
 - *Registry Tweaks*
 - *Enable/Disable built-in Administrator account*
+- *Disable Windows Defender and Windows Firewall*
 
 **Preview of GUI (Dont mind Windows 8.1, i was lazy to bootup Windows 10)**
-![Prewiev_of_GUI](https://user-images.githubusercontent.com/78772453/131383527-ac18ba8e-f6d2-4c36-90a0-3696866af66a.PNG)
+![newgui](https://user-images.githubusercontent.com/78772453/131883890-441a831a-d1c3-402f-9d8b-d3a3e0a9e65f.PNG)
+
 
