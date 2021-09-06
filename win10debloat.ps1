@@ -675,19 +675,28 @@ $essentialtweaks.Add_Click({
     If (!(Test-Path $regPath2)) {
         New-Item $regPath2
     }
+        Set-ItemProperty -Path $regPath2 -Name ContentDeliveryAllowed -Value 0 
+        Set-ItemProperty -Path $regPath2 -Name OemPreInstalledAppsEnabled -Value 0 
+        Set-ItemProperty -Path $regPath2 -Name PreInstalledAppsEnabled -Value 0 
+        Set-ItemProperty -Path $regPath2 -Name PreInstalledAppsEverEnabled -Value 0 
+        Set-ItemProperty -Path $regPath2 -Name SilentInstalledAppsEnabled -Value 0 
+        Set-ItemProperty -Path $regPath2 -Name SystemPaneSuggestionsEnabled -Value 0 
+        <#
+        old method, might not work just here to teach u smth
         Set-ItemProperty $regPath2  ContentDeliveryAllowed -Value 0 
         Set-ItemProperty $regPath2  OemPreInstalledAppsEnabled -Value 0 
         Set-ItemProperty $regPath2  PreInstalledAppsEnabled -Value 0 
         Set-ItemProperty $regPath2  PreInstalledAppsEverEnabled -Value 0 
         Set-ItemProperty $regPath2  SilentInstalledAppsEnabled -Value 0 
-        Set-ItemProperty $regPath2  SystemPaneSuggestionsEnabled -Value 0          
+        Set-ItemProperty $regPath2  SystemPaneSuggestionsEnabled -Value 0
+        #>        
 
     $Holo = "HKCU:\Software\Microsoft\Windows\CurrentVersion\Holographic"    
     If (Test-Path $Holo) {
         Set-ItemProperty $Holo  FirstRunSucceeded -Value 0 
     }
 
-    #tweaking abit more
+    #tweaking abit more (less ram usage)
     if((Test-Path -LiteralPath "HKLM:\SYSTEM\CurrentControlSet\Control") -ne $true) {  New-Item "HKLM:\SYSTEM\CurrentControlSet\Control" -force -ea SilentlyContinue };
     if((Test-Path -LiteralPath "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile") -ne $true) {  New-Item "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile" -force -ea SilentlyContinue };
     if((Test-Path -LiteralPath "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks") -ne $true) {  New-Item "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks" -force -ea SilentlyContinue };
@@ -805,6 +814,14 @@ $essentialtweaks.Add_Click({
     New-ItemProperty -LiteralPath 'HKLM:\SYSTEM\CurrentControlSet\Control\Power\PowerSettings\54533251-82be-4824-96c1-47b60b740d00\3b04d4fd-1cc7-4f23-ab1c-d1337819c4bb\DefaultPowerSchemeValues\381b4222-f694-41f0-9685-ff5bb260df2e' -Name 'DCSettingIndex' -Value 0 -PropertyType DWord -Force -ea SilentlyContinue;
     New-ItemProperty -LiteralPath 'HKLM:\SYSTEM\CurrentControlSet\Control\Power\PowerSettings\54533251-82be-4824-96c1-47b60b740d00\3b04d4fd-1cc7-4f23-ab1c-d1337819c4bb\DefaultPowerSchemeValues\8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c' -Name 'ACSettingIndex' -Value 0 -PropertyType DWord -Force -ea SilentlyContinue;
     New-ItemProperty -LiteralPath 'HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender' -Name 'DisableAntiSpyware' -Value 1 -PropertyType DWord -Force -ea SilentlyContinue;
+
+    write-Host "Tweaking 'Imersive Control Panel' items."
+    $ImmersiveControlPanelPath = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer"
+    if (!(Test-Path $ImmersiveControlPanelPath)){
+        New-Item -Path $ImmersiveControlPanelPath -Force | Out-Null
+    }
+    $Settings = "hide:quiethours;batterysaver;tabletmode;multitasking;project;crossdevice;clipboard;remotedesktop;deviceencryption;bluetooth;printers;devices-touchpad;typing;wheel;pen;autoplay;usb;;mobile-devices;network-cellular;network-wifi;network-wificalling;network-dialup;network-directaccess;network-vpn;network-airplanemode or proximity;network-airplanemode;airplane;airplanemode;network-mobilehotspot;nfctransactions;datausage;network-proxy;lockscreen;fonts;defaultapps;maps;appsforwebsites;videoplayback;workplace;otherusers;sync;regionlanguage-jpnime;regionlanguage-chsime-pinyin;regionlanguage-chsime-wubi;regionlanguage-korime;speech;;gaming-gamebar;gaming-gamedvr;gaming-broadcasting;gaming-gamemode;gaming-xboxnetworking;easeofaccess-display;easeofaccess-cursorandpointersize;easeofaccess-cursor;easeofaccess-magnifier;easeofaccess-colorfilter;easeofaccess-highcontrast;easeofaccess-narrator;easeofaccess-audio;easeofaccess-closedcaptioning;easeofaccess-speechrecognition;easeofaccess-eyecontrol;;cortana-talktocortana;cortana-permissions;cortana-moredetails;privacy;privacy-speech;privacy-speechtyping;privacy-feedback;privacy-activityhistory;privacy-location;privacy-voiceactivation;privacy-notifications;privacy-accountinfo;privacy-contacts;privacy-calendar;privacy-callhistory;privacy-email;privacy-eyetracker;privacy-tasks;privacy-messaging;privacy-radios;privacy-customdevices;privacy-backgroundapps;privacy-appdiagnostics;privacy-automaticfiledownloads;privacy-documents;privacy-pictures;privacy-documents;privacy-broadfilesystemaccess;delivery-optimization;backup;troubleshoot;findmydevice;developers;windowsinsider;;holographic-audio;privacy-holographic-environment;holographic-headset;holographic-management;region"
+    Set-ItemProperty -Path $ImmersiveControlPanelPath -Name "SettingsPageVisibility" -Type String -Value $Settings
 
     Start-Sleep -Seconds 1
     Stop-Process -Name explorer -Force -PassThru
@@ -1462,10 +1479,14 @@ $TakeOwnership.Add_Click({
 })
 
 $DisableWindowsDefender.Add_Click({
+Clear-Host
+write-Host "'Disable Windows Defender' button does not work at this moment! Please wait for fix"
+write-Host "Im trying to figure out how to do it best"
+<#
 $DebloatFolder = $PWD.Path
+Set-Location $DebloatFolder
 
 
-function Disable{
 .$DebloatFolder\x64\NSudoLG.exe -U:T -P:E -ShowWindowMode:Hide powershell "Set-Service -StartupType Disabled 'WinDefend' -ErrorAction SilentlyContinue"
 .$DebloatFolder\x64\NSudoLG.exe -U:T -P:E -ShowWindowMode:Hide powershell "Stop-Service -Force -Name 'WinDefend' -ErrorAction SilentlyContinue"
 .$DebloatFolder\x64\NSudoLG.exe -U:T -P:E -ShowWindowMode:Hide powershell "Set-Service -StartupType Disabled 'WdNisSvc' -ErrorAction SilentlyContinue"
@@ -1474,20 +1495,15 @@ function Disable{
 .$DebloatFolder\x64\NSudoLG.exe -U:T -P:E -ShowWindowMode:Hide powershell "Stop-Service -Force -Name 'mpssvc' -ErrorAction SilentlyContinue"
 .$DebloatFolder\x64\NSudoLG.exe -U:T -P:E -ShowWindowMode:Hide powershell "Set-Service -StartupType Disabled 'Sense' -ErrorAction SilentlyContinue"
 .$DebloatFolder\x64\NSudoLG.exe -U:T -P:E -ShowWindowMode:Hide powershell "Stop-Service -Force -Name 'Sense' -ErrorAction SilentlyContinue"
-}
-
-function ThrowError{
-    Clear-Host 
-    write-Host "'NSudo' executable not found!"
-}
 
 
-#check if there is nsudo files
-if(Get-Item -Path "$DebloatFolder\x64\NSudoLG.exe"){
+if (Test-Path -Path "$DebloatFolder\x64"){
     Disable
 } else {
-    ThrowError
+    Clear-Host
+    write-Host "'NSudo' folder not found"
 }
+#>
 })
 
 [void]$Form.ShowDialog()
