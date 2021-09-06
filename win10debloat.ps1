@@ -1483,6 +1483,7 @@ Clear-Host
 write-Host "'Disable Windows Defender' button does not work at this moment! Please wait for fix"
 write-Host "Im trying to figure out how to do it best"
 <#
+
 $DebloatFolder = $PWD.Path
 Set-Location $DebloatFolder
 
