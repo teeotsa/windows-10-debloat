@@ -174,6 +174,10 @@ $Form.controls.AddRange(@($TakeOwnership,$UninstallEdge,$AdminAccount,$RemoveBlo
 
 $essentialtweaks.Add_Click({
 
+    write-Host "Making Restore Point... Please wait"
+    Enable-ComputerRestore -Drive "C:\"
+    Checkpoint-Computer -Description "RestorePoint1" -RestorePointType "MODIFY_SETTINGS"
+
     Write-Host "Running O&O Shutup with Not Recommended Settings"
     Import-Module BitsTransfer
     Start-BitsTransfer -Source "https://raw.githubusercontent.com/teeotsa/win10script/master/ooshutup10.cfg" -Destination ooshutup10.cfg
