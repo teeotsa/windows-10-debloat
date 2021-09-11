@@ -155,13 +155,6 @@ $TakeOwnership.height            = 30
 $TakeOwnership.location          = New-Object System.Drawing.Point($OtherTweaksLeft,216)
 $TakeOwnership.Font              = New-Object System.Drawing.Font('Microsoft Sans Serif',12)
 
-$DisableWindowsDefender          = New-Object system.Windows.Forms.Button
-$DisableWindowsDefender.text     = "Disable Windows Defender"
-$DisableWindowsDefender.width    = 250
-$DisableWindowsDefender.height   = 30
-$DisableWindowsDefender.location = New-Object System.Drawing.Point($OtherTweaksLeft,256)
-$DisableWindowsDefender.Font     = New-Object System.Drawing.Font('Microsoft Sans Serif',12)
-
 $AdminAccount                    = new-object System.Windows.Forms.checkbox
 $AdminAccount.Location           = new-object System.Drawing.Size(42,455)
 $AdminAccount.Size               = new-object System.Drawing.Size(100,15)
@@ -177,7 +170,7 @@ if ($AdminEnabled -eq 'False'){
     $AdminAccount.Checked = $false
 }
 
-$Form.controls.AddRange(@($DisableWindowsDefender,$TakeOwnership,$UninstallEdge,$AdminAccount,$RemoveBloat,$disablewindowsupdate,$enablewindowsupdate,$smalltaskbaricons,$Label16,$Label17,$Label18,$Label19,$WindowsCleaner,$Panel1,$Panel2,$Label3,$Label15,$Panel4,$PictureBox1,$Label1,$Label4,$Panel3,$essentialtweaks,$backgroundapps,$cortana,$actioncenter,$darkmode,$visualfx,$onedrive,$lightmode))
+$Form.controls.AddRange(@($TakeOwnership,$UninstallEdge,$AdminAccount,$RemoveBloat,$disablewindowsupdate,$enablewindowsupdate,$smalltaskbaricons,$Label16,$Label17,$Label18,$Label19,$WindowsCleaner,$Panel1,$Panel2,$Label3,$Label15,$Panel4,$PictureBox1,$Label1,$Label4,$Panel3,$essentialtweaks,$backgroundapps,$cortana,$actioncenter,$darkmode,$visualfx,$onedrive,$lightmode))
 
 $essentialtweaks.Add_Click({
 
@@ -442,7 +435,7 @@ $essentialtweaks.Add_Click({
     Get-Service -Name $Services -ErrorAction SilentlyContinue | Set-Service -StartupType Disabled
         $running = Get-Service -Name $Services -ErrorAction SilentlyContinue | Where-Object {$_.Status -eq 'Running'}
         if ($running) { 
-            Stop-Service -Name $Services
+            Stop-Service -Name $Services -Force -PassThru | Out-Null
         }
     }
 
@@ -1230,7 +1223,6 @@ $RemoveBloat.Add_Click({
         foreach ($Bloat in $BloatwareList) {
             Get-AppxPackage -Name $Bloat| Remove-AppxPackage
             Get-AppxProvisionedPackage -Online | Where-Object DisplayName -like $Bloat | Remove-AppxProvisionedPackage -Online
-
             write-Host "Trying to remove $Bloat"
         }
 
@@ -1276,6 +1268,9 @@ $RemoveBloat.Add_Click({
             Remove-Item $Key -Recurse -Force -ErrorAction SilentlyContinue | Out-Null
         }
 
+        <#
+        this wont remove bloatware permanently because you dont have access/perms to remove those files/folders
+        will be fixed soon
 
         #function to remove/delete metro applications permanently by deleting files
         function RemovePermanently{
@@ -1293,7 +1288,7 @@ $RemoveBloat.Add_Click({
             }
 
         }
-
+        #>
         function Ask{
             Clear-Host
             Write-Warning "Do you want to remove apps permanently? There is noway to reinstall apps then."
@@ -1476,35 +1471,6 @@ $TakeOwnership.Add_Click({
         ThrowError
     }
 
-})
-
-$DisableWindowsDefender.Add_Click({
-Clear-Host
-write-Host "'Disable Windows Defender' button does not work at this moment! Please wait for fix"
-write-Host "Im trying to figure out how to do it best"
-<#
-
-$DebloatFolder = $PWD.Path
-Set-Location $DebloatFolder
-
-
-.$DebloatFolder\x64\NSudoLG.exe -U:T -P:E -ShowWindowMode:Hide powershell "Set-Service -StartupType Disabled 'WinDefend' -ErrorAction SilentlyContinue"
-.$DebloatFolder\x64\NSudoLG.exe -U:T -P:E -ShowWindowMode:Hide powershell "Stop-Service -Force -Name 'WinDefend' -ErrorAction SilentlyContinue"
-.$DebloatFolder\x64\NSudoLG.exe -U:T -P:E -ShowWindowMode:Hide powershell "Set-Service -StartupType Disabled 'WdNisSvc' -ErrorAction SilentlyContinue"
-.$DebloatFolder\x64\NSudoLG.exe -U:T -P:E -ShowWindowMode:Hide powershell "Stop-Service -Force -Name 'WdNisSvc' -ErrorAction SilentlyContinue"
-.$DebloatFolder\x64\NSudoLG.exe -U:T -P:E -ShowWindowMode:Hide powershell "Set-Service -StartupType Disabled 'mpssvc' -ErrorAction SilentlyContinue"
-.$DebloatFolder\x64\NSudoLG.exe -U:T -P:E -ShowWindowMode:Hide powershell "Stop-Service -Force -Name 'mpssvc' -ErrorAction SilentlyContinue"
-.$DebloatFolder\x64\NSudoLG.exe -U:T -P:E -ShowWindowMode:Hide powershell "Set-Service -StartupType Disabled 'Sense' -ErrorAction SilentlyContinue"
-.$DebloatFolder\x64\NSudoLG.exe -U:T -P:E -ShowWindowMode:Hide powershell "Stop-Service -Force -Name 'Sense' -ErrorAction SilentlyContinue"
-
-
-if (Test-Path -Path "$DebloatFolder\x64"){
-    Disable
-} else {
-    Clear-Host
-    write-Host "'NSudo' folder not found"
-}
-#>
 })
 
 [void]$Form.ShowDialog()
