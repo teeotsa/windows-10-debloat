@@ -6,10 +6,11 @@ Note: Script should work with Windows 11 aswell but you have to comment out foll
 
 This script is based of Chris Titus Tech's script! Original : https://github.com/ChrisTitusTech/win10script
  
-Be careful, there is noway to revert back once you pressed "System Tweaks" button and! Script **wont** make any restore points and **disables** all backup services. You can always make backup and restore point BEFORE running my script!
-If you have restore point and you want to revert back with it, you should enable **'Windows Backup'** and **'Volume Shadow Copy'** service! Run these codes with PowerShell!
+You can now restore your settings with restore point. If you have restore point and you want to revert back with it, you should enable **'Windows Backup'** and **'Volume Shadow Copy'** service! Run these lines of codes with PowerShell!
 - Line of code to enable *Windows Backup* `Set-Service -DisplayName "Windows Backup" -StartupType Manual | Out-Null`
 - Line of code to enable *Volume Shadow Copy* `Set-Service -Name "VSS" -StartupType Manual | Out-Null` 
+
+**Also, there is restore scripts now! You can run those restore scritps to restore some of the settings! NOTE: this wont restore everything, best way to restore all of your settings is to use restore point script created!**
 
 This script will remove following:
 - *Action Center*
