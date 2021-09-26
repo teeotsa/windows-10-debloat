@@ -1,36 +1,34 @@
-# Windows 10 Debloater
+# Windows 10 Debloater Script
 
-This script will optimize your installation of **Windows 10** and maybe even **Windows 11** (Read down below)
+⚠ Disclaimer: You're doing this at your own risk, I am not responsible for any data loss or damage that may occur.
 
-This script is based of **Chris Titus Tech's** script! [Original](https://github.com/ChrisTitusTech/win10script)
+This script might break something important for You. But if you are looking **Windows 7 like experience without any UWP Applications** then this script is perfect for you!
+Some applications may refuse to install/run with this script, but you can always edit this script. Im working on "**soft debloat**" script
 
+# Support
 
+✔ - Supported Operating Systems (Verified to work)
+- Windows 10 **21H1**
+- Windows 10 **21H2**
+- Windows 10 **1809 LTSC**
 
-You can now restore your settings with restore point. If you have restore point and you want to revert back with it you can do it now. **Also, there is restore scripts now! You can run those restore scritps to restore some of the settings! NOTE: this wont restore everything, best way to restore all of your settings is to use restore point script created!** You can find those restore scripts [here](https://github.com/teeotsa/windows-10-debloat/tree/main/restoreScripts)
+✖ - Unsupported Operating Systems
+- Windows **8.1**
+- Windows **8.0**
+- Windows **7**
 
+⚠ - Should be supported (Works with tweaks)
+- Windows 11 
 
-# What this script can do?
+# Restore?
 
-This scirpt will remove/disable alot of thing like : 
+Script should make **restore point** for you before starting with everything else. So, if you still have that **restore point**, you can use that to restore your settings. What to do if you don't have that **restore point** anymore? Well, then you can just reinstall Windows or use my restore scripts.
+You can find those restore scripts [here!](https://github.com/teeotsa/windows-10-debloat/tree/main/restoreScripts)
 
-- Bloatware apps
-- Microsoft Edge
-- Action Center
-- Windows Update
-- Switch between **Dark** & **Light** mode
-- 'Take Ownership' context menu item
-- Disable alot of services/scheduled tasks
+# How to run this script?
 
-And of course, you can use **Restore Point** to restore your setting or use some of the **restore scripts** [here](https://github.com/teeotsa/windows-10-debloat/tree/main/restoreScripts)
-
-# Running this script on Windows 11
-
-Script is working with **Windows 11** aswell but you have to comment out following lines : 
-![comment out](https://user-images.githubusercontent.com/78772453/131884458-0b623b2e-999b-4b72-9831-6a19530d12f0.PNG)
-
-
-**Preview of GUI (Dont mind Windows 8)**
-
-![Windows10DebloatGUI](https://user-images.githubusercontent.com/78772453/132985395-977644fd-b326-480c-94c7-a313e99b7121.PNG)
-
-
+Open **PowerShell** as admin and set Execution Policy to unrestricted with this command (NOTE: Admin privileges required)
+```
+Set-ExecutionPolicy Unrestricted -Force
+```
+After its done, you can just run ``win10debloat.ps1``
