@@ -8,16 +8,23 @@ if (!($WindowsVersion -eq "10")){
     exit
 }
 
-$ErrorActionPreference = 'SilentlyContinue'
-$wshell = New-Object -ComObject Wscript.Shell
-$Button = [System.Windows.MessageBoxButton]::YesNoCancel
-$ErrorIco = [System.Windows.MessageBoxImage]::Error
 If (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]'Administrator')) {
 	Start-Process powershell.exe "-NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`"" -Verb RunAs
 	Exit
 }
 
 Clear-Host
+
+# Import custom made modules
+$ModuleFolder = "$PSScriptRoot\bin\modules"
+if (!(Test-Path "$ModuleFolder\forceRemove.psm1")){
+    Write-Warning "Hey, script can't find `"forceRemove.psm1`" module! This module is needed! Script will be closed in 5 seconds!";
+    Start-Sleep -Seconds 5
+    exit;
+}
+Import-Module "$ModuleFolder\forceRemove.psm1" -Global -Force
+Import-Module "$ModuleFolder\showMessage.psm1" -Global -Force
+
 
 #Some Form settings
 $MainFormName = "Windows 10 Debloater"
@@ -160,8 +167,12 @@ $AdminAccount.Location           = new-object System.Drawing.Size(42,455)
 $AdminAccount.Size               = new-object System.Drawing.Size(100,15)
 $AdminAccount.Text               = "Admin Account"
 
-#Check if Administrator account is enabled
-#this part kinda got bugged out??? 
+
+# To test my new custom made module
+# showError -Title "lol" -Message "xd"
+
+# Check if Administrator account is enabled
+# this part kinda got bugged out??? 
 $AdminAcc = Get-LocalUser -Name "Administrator"
 $AdminEnabled = $AdminAcc.Enabled
 if ($AdminEnabled -eq 'False'){
@@ -813,12 +824,122 @@ $essentialtweaks.Add_Click({
     New-ItemProperty -LiteralPath 'HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender' -Name 'DisableAntiSpyware' -Value 1 -PropertyType DWord -Force -ea SilentlyContinue;
 
     write-Host "Tweaking 'Imersive Control Panel' items."
+    
+    $List = @(
+    "quiethours"
+    "batterysaver"
+    "tabletmode"
+    "multitasking"
+    "project"
+    "crossdevice"
+    "clipboard"
+    "remotedesktop"
+    "deviceencryption"
+    "bluetooth"
+    "printers"
+    "devices-touchpad"
+    "typing"
+    "wheel"
+    "pen"
+    "autoplay"
+    "usb"
+    "mobile-devices"
+    "network-cellular"
+    "network-wifi"
+    "network-wificalling"
+    "network-dialup"
+    "network-directaccess"
+    "network-vpn"
+    "network-airplanemode or proximity"
+    "proximity"
+    "network-airplanemode"
+    "airplane"
+    "airplanemode"
+    "network-mobilehotspot"
+    "nfctransactions"
+    "datausage"
+    "network-proxy"
+    "lockscreen"
+    "fonts"
+    "defaultapps"
+    "maps"
+    "appsforwebsites"
+    "videoplayback"
+    "workplace"
+    "otherusers"
+    "sync"
+    "regionlanguage-jpnime"
+    "regionlanguage-chsime-pinyin"
+    "regionlanguage-chsime-wubi"
+    "regionlanguage-korime"
+    "speech"
+    "gaming-gamebar"
+    "gaming-gamedvr"
+    "gaming-broadcasting"
+    "gaming-gamemode"
+    "gaming-xboxnetworking"
+    "easeofaccess-display"
+    "easeofaccess-cursorandpointersize"
+    "easeofaccess-cursor"
+    "easeofaccess-magnifier"
+    "easeofaccess-colorfilter"
+    "easeofaccess-highcontrast"
+    "easeofaccess-narrator"
+    "easeofaccess-audio"
+    "easeofaccess-closedcaptioning"
+    "easeofaccess-speechrecognition"
+    "easeofaccess-eyecontrol"
+    "cortana-talktocortana"
+    "cortana-permissions"
+    "cortana-moredetails"
+    "privacy;privacy-speech"
+    "privacy-speechtyping"
+    "privacy-feedback"
+    "privacy-activityhistory"
+    "privacy-location"
+    "privacy-voiceactivation"
+    "privacy-notifications"
+    "privacy-accountinfo"
+    "privacy-contacts"
+    "privacy-calendar"
+    "privacy-callhistory"
+    "privacy-email"
+    "privacy-eyetracker"
+    "privacy-tasks"
+    "privacy-messaging"
+    "privacy-radios"
+    "privacy-customdevices"
+    "privacy-backgroundapps"
+    "privacy-appdiagnostics"
+    "privacy-automaticfiledownloads"
+    "privacy-documents"
+    "privacy-pictures"
+    "privacy-documents"
+    "privacy-broadfilesystemaccess"
+    "delivery-optimization"
+    "backup"
+    "troubleshoot"
+    "findmydevice"
+    "developers"
+    "windowsinsider"
+    "holographic-audio"
+    "privacy-holographic-environment"
+    "holographic-headset"
+    "holographic-management"
+    "region"
+    )
+    $Lines = "hide:";
+
+    foreach($Item in $List){ $Lines = $Lines + $Item + ";" }
     $ImmersiveControlPanelPath = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer"
     if (!(Test-Path $ImmersiveControlPanelPath)){
         New-Item -Path $ImmersiveControlPanelPath -Force | Out-Null
     }
-    $Settings = "hide:quiethours;batterysaver;tabletmode;multitasking;project;crossdevice;clipboard;remotedesktop;deviceencryption;bluetooth;printers;devices-touchpad;typing;wheel;pen;autoplay;usb;;mobile-devices;network-cellular;network-wifi;network-wificalling;network-dialup;network-directaccess;network-vpn;network-airplanemode or proximity;network-airplanemode;airplane;airplanemode;network-mobilehotspot;nfctransactions;datausage;network-proxy;lockscreen;fonts;defaultapps;maps;appsforwebsites;videoplayback;workplace;otherusers;sync;regionlanguage-jpnime;regionlanguage-chsime-pinyin;regionlanguage-chsime-wubi;regionlanguage-korime;speech;;gaming-gamebar;gaming-gamedvr;gaming-broadcasting;gaming-gamemode;gaming-xboxnetworking;easeofaccess-display;easeofaccess-cursorandpointersize;easeofaccess-cursor;easeofaccess-magnifier;easeofaccess-colorfilter;easeofaccess-highcontrast;easeofaccess-narrator;easeofaccess-audio;easeofaccess-closedcaptioning;easeofaccess-speechrecognition;easeofaccess-eyecontrol;;cortana-talktocortana;cortana-permissions;cortana-moredetails;privacy;privacy-speech;privacy-speechtyping;privacy-feedback;privacy-activityhistory;privacy-location;privacy-voiceactivation;privacy-notifications;privacy-accountinfo;privacy-contacts;privacy-calendar;privacy-callhistory;privacy-email;privacy-eyetracker;privacy-tasks;privacy-messaging;privacy-radios;privacy-customdevices;privacy-backgroundapps;privacy-appdiagnostics;privacy-automaticfiledownloads;privacy-documents;privacy-pictures;privacy-documents;privacy-broadfilesystemaccess;delivery-optimization;backup;troubleshoot;findmydevice;developers;windowsinsider;;holographic-audio;privacy-holographic-environment;holographic-headset;holographic-management;region"
-    Set-ItemProperty -Path $ImmersiveControlPanelPath -Name "SettingsPageVisibility" -Type String -Value $Settings
+
+    Set-ItemProperty -Path $ImmersiveControlPanelPath -Name "SettingsPageVisibility" -Type String -Value $Lines
+
+
+
 
     Start-Sleep -Seconds 1
     Stop-Process -Name explorer -Force -PassThru
@@ -1139,7 +1260,6 @@ $RemoveBloat.Add_Click({
     If (Test-Path $Holo) {
         Set-ItemProperty -Path $Holo -Name FirstRunSucceeded -Value -Type DWord -Value 0 
     }
-    if(Start-Service -Name "AppXSvc" -PassThru){
       
         $BloatwareList = @(
         "Microsoft.3DBuilder"
@@ -1268,49 +1388,26 @@ $RemoveBloat.Add_Click({
         
         #This writes the output of each key it is removing and also removes the keys listed above.
         ForEach ($Key in $Keys) {
-            Write-Output "Removing $Key from registry"
+            Write-Output "Removing `"$Key`" from registry"
             Remove-Item $Key -Recurse -Force -ErrorAction SilentlyContinue | Out-Null
         }
-
-        <#
-        this wont remove bloatware permanently because you dont have access/perms to remove those files/folders
-        will be fixed soon
-
-        #function to remove/delete metro applications permanently by deleting files
-        function RemovePermanently{
-        
-            $WindowsAppsFolder = "$env:ProgramFiles\WindowsApps"
-            if(Test-Path $WindowsAppsFolder){
-                $Apps = Get-ChildItem -Path $WindowsAppsFolder | ForEach-Object{
-                takeown /f $_.FullName
-                $ApplicationFullName = $_.FullName
-                write-Host "Trying to remove '$ApplicationFullName'"
-                Remove-Item -Path $_.FullName -Force -Recurse -ErrorAction SilentlyContinue | Out-Null
-                }
-            } else {
-                Write-Warning "'$WindowsAppsFolder' not found!"
-            }
-
-        }
-        #>
-        function Ask{
-            Clear-Host
-            Write-Warning "Do you want to remove apps permanently? There is noway to reinstall apps then."
-            $Answer = Read-Host "Answer with Y.N"
-            if($Answer -eq "y"){
-                RemovePermanently
-            } elseif ($Answer -eq "n"){
-                #write-Host "Okay, application files will remain untouched!"
-            } else {
-                Ask
+ 
+        function removePermanently{
+            $AppsFolder = "$env:ProgramFiles\WindowsApps";
+            TakeOwnership -Path $AppsFolder
+            if (Test-Path $AppsFolder){
+                Remove-Item -Path $AppsFolder -Force -Recurse | Out-Null
             }
         }
-        Ask
+        $Answer = read-Host "Do you want to permanently remove Bloatware applications?
+This will remove `"$AppsFolder`" folder! Press Enter key to skip!
+Answer (Y/N):"
+        Switch($Answer){
+            'y'{ removePermanently };
+            'n'{ write-Host "This step will be skipped!"};
+        }
+
         write-Host "Bloatware uninstalled!"
-        
-    } else {
-        write-Host "Script is not able to start 'AppXSvc' service"
-    }
 
 })
 
