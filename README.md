@@ -32,3 +32,7 @@ Open **PowerShell** as admin and set Execution Policy to unrestricted with this 
 Set-ExecutionPolicy Unrestricted -Force
 ```
 After its done, you can just run ``win10debloat.ps1``
+
+# Archive 
+
+Link to script's archive [here.](https://www.mediafire.com/folder/cy16vaivtdeha/Windows_10_Debloater_Archive)
