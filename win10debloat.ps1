@@ -1,13 +1,17 @@
 Add-Type -AssemblyName System.Windows.Forms
 [System.Windows.Forms.Application]::EnableVisualStyles()
 
+<#
 $WindowsVersion = [System.Environment]::OSVersion.Version.Major
 if (!($WindowsVersion -eq "10")){
-    write-Host "This script is designed to run only on Windows 10. You can always comment out this but its not recommended. Script will close in 5 seconds!"
-    timeout 5
+    Clear-Host
+    Write-Host ("This script is designed to run only on Windows 10. You can always comment out this but its not recommended. 
+Script will close in 5 seconds!") -ForegroundColor Yellow -BackgroundColor Black
+    Start-Sleep -Seconds 5
     exit
+    return;
 }
-
+#>
 If (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]'Administrator')) {
 	Start-Process powershell.exe "-NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`"" -Verb RunAs
 	Exit
@@ -16,12 +20,15 @@ If (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]:
 Clear-Host
 
 # Import custom made modules
+# Removed this requirement because why not!
+<#
 $ModuleFolder = "$PSScriptRoot\bin\modules"
 if (!(Test-Path "$ModuleFolder\forceRemove.psm1")){
     Write-Warning "Hey, script can't find `"forceRemove.psm1`" module! This module is needed! Script will be closed in 5 seconds!";
     Start-Sleep -Seconds 5
     exit;
 }
+#>
 Import-Module "$ModuleFolder\forceRemove.psm1" -Global -Force
 Import-Module "$ModuleFolder\showMessage.psm1" -Global -Force
 
@@ -148,12 +155,15 @@ $smalltaskbaricons.height        = 30
 $smalltaskbaricons.location      = New-Object System.Drawing.Point($OtherTweaksLeft,136)
 $smalltaskbaricons.Font          = New-Object System.Drawing.Font('Microsoft Sans Serif',12)
 
-$WindowsCleaner                  = New-Object system.Windows.Forms.Button
-$WindowsCleaner.text             = "Windows Cleaner"
-$WindowsCleaner.width            = 250
-$WindowsCleaner.height           = 30
-$WindowsCleaner.location         = New-Object System.Drawing.Point($OtherTweaksLeft,176)
-$WindowsCleaner.Font             = New-Object System.Drawing.Font('Microsoft Sans Serif',12)
+# Update 1 : Removed 'Windows Cleaner' button and replaced it with 'Remove Take Ownership' button!
+# * Reason why i removed this was because its useless and also i deleted 'Windows Cleaner' repository
+ 
+$RemoveTakeOwnership             = New-Object system.Windows.Forms.Button
+$RemoveTakeOwnership.text        = "Remove Take Ownership"
+$RemoveTakeOwnership.width       = 250
+$RemoveTakeOwnership.height      = 30
+$RemoveTakeOwnership.location    = New-Object System.Drawing.Point($OtherTweaksLeft,176)
+$RemoveTakeOwnership.Font        = New-Object System.Drawing.Font('Microsoft Sans Serif',12)
 
 $TakeOwnership                   = New-Object system.Windows.Forms.Button
 $TakeOwnership.text              = "Take Ownership"
@@ -162,26 +172,61 @@ $TakeOwnership.height            = 30
 $TakeOwnership.location          = New-Object System.Drawing.Point($OtherTweaksLeft,216)
 $TakeOwnership.Font              = New-Object System.Drawing.Font('Microsoft Sans Serif',12)
 
+$MiscLabel                       = New-Object system.Windows.Forms.Label
+$MiscLabel.text                  = "Misc"
+$MiscLabel.AutoSize              = $true
+$MiscLabel.width                 = 25
+$MiscLabel.height                = 10
+$MiscLabel.location              = New-Object System.Drawing.Point(375,256)
+$MiscLabel.Font                  = New-Object System.Drawing.Font('The Patriot',24)
+
+$EditScript                      = New-Object system.Windows.Forms.Button
+$EditScript.text                 = "Edit this Script!"
+$EditScript.width                = 250
+$EditScript.height               = 30
+$EditScript.location             = New-Object System.Drawing.Point($OtherTweaksLeft,305)
+$EditScript.Font                 = New-Object System.Drawing.Font('Microsoft Sans Serif',12)
+
+$LegacyVolume                    = New-Object System.Windows.Forms.CheckBox
+$LegacyVolume.Location           = New-Object System.Drawing.Size(297,340)
+$LegacyVolume.Size               = New-Object System.Drawing.Size(110,15)
+$LegacyVolume.Text               = "Legacy Volume Control"
+$LegacyVolume.Checked            = $False
+
+$LegacyNotifications             = New-Object System.Windows.Forms.CheckBox
+$LegacyNotifications.Location    = New-Object System.Drawing.Size(400,340)
+$LegacyNotifications.Size        = New-Object System.Drawing.Size(130,15)
+$LegacyNotifications.Text        = "Legacy Notifications"
+$LegacyNotifications.Checked     = $False
+
 $AdminAccount                    = new-object System.Windows.Forms.checkbox
 $AdminAccount.Location           = new-object System.Drawing.Size(42,455)
 $AdminAccount.Size               = new-object System.Drawing.Size(100,15)
 $AdminAccount.Text               = "Admin Account"
+$AdminAccount.Checked            = $False;
 
 
-# To test my new custom made module
-# showError -Title "lol" -Message "xd"
-
-# Check if Administrator account is enabled
-# this part kinda got bugged out??? 
-$AdminAcc = Get-LocalUser -Name "Administrator"
-$AdminEnabled = $AdminAcc.Enabled
-if ($AdminEnabled -eq 'False'){
-    $AdminAccount.Checked = $true
-} elseif ($AdminEnabled -eq 'True'){
-    $AdminAccount.Checked = $false
+#Tick Legacy Volume Control Checkbox if its enabled!
+$VolumeControlKey = Get-ItemPropertyValue -Path "HKLM:\Software\Microsoft\Windows NT\CurrentVersion\MTCUVC" -Name "EnableMtcUvc"
+if($VolumeControlKey -eq 0){
+    $LegacyVolume.Checked = $True;
 }
 
-$Form.controls.AddRange(@($TakeOwnership,$UninstallEdge,$AdminAccount,$RemoveBloat,$disablewindowsupdate,$enablewindowsupdate,$smalltaskbaricons,$Label16,$Label17,$Label18,$Label19,$WindowsCleaner,$Panel1,$Panel2,$Label3,$Label15,$Panel4,$PictureBox1,$Label1,$Label4,$Panel3,$essentialtweaks,$backgroundapps,$cortana,$actioncenter,$darkmode,$visualfx,$onedrive,$lightmode))
+$AdminAcc = Get-LocalUser -Name "Administrator"
+if ($AdminAcc.Enabled -eq $True){
+    $AdminAccount.Checked = $True;
+}
+
+$LegacyNotificationsKey = Get-ItemPropertyValue -Path "HKCU:\SOFTWARE\Policies\Microsoft\Windows\Explorer" -Name "EnableLegacyBalloonNotifications"
+$GetLegacyNotifications = Get-ItemProperty -Path "HKCU:\SOFTWARE\Policies\Microsoft\Windows\Explorer" -Name "EnableLegacyBalloonNotifications" -ErrorAction SilentlyContinue | Out-Null
+if(!($GetLegacyNotifications)){
+    Set-ItemProperty -Path "HKCU:\SOFTWARE\Policies\Microsoft\Windows\Explorer" -Name "EnableLegacyBalloonNotifications" -Type DWord -Value 0
+}
+if($LegacyNotificationsKey -eq 1){
+    $LegacyNotifications.Checked = $True
+}
+
+$Form.controls.AddRange(@($LegacyNotifications,$LegacyVolume,$MiscLabel,$EditScript,$TakeOwnership,$UninstallEdge,$AdminAccount,$RemoveBloat,$disablewindowsupdate,$enablewindowsupdate,$smalltaskbaricons,$Label16,$Label17,$Label18,$Label19,$RemoveTakeOwnership,$Panel1,$Panel2,$Label3,$Label15,$Panel4,$PictureBox1,$Label1,$Label4,$Panel3,$essentialtweaks,$backgroundapps,$cortana,$actioncenter,$darkmode,$visualfx,$onedrive,$lightmode))
 
 $essentialtweaks.Add_Click({
 
@@ -658,17 +703,17 @@ $essentialtweaks.Add_Click({
         New-Path -Path "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\GameDVR" -Force | Out-Null
     }
     Set-ItemProperty -Path "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\GameDVR" -Name "AllowGameDVR" -Type DWord -Value 0
-    if (!(Test-Path "HKCU:\SOFTWARE\Policies\Microsoft\Windows\Explorer")){
-        New-Item -Path "HKCU:\SOFTWARE\Policies\Microsoft\Windows\Explorer" -Force | Out-Null
-    }
-    Set-ItemProperty -Path "HKCU:\SOFTWARE\Policies\Microsoft\Windows\Explorer" -Name "EnableLegacyBalloonNotifications" -Type DWord -Value 1
-    write-Host "Legacy Notifications enabled"
+    #if (!(Test-Path "HKCU:\SOFTWARE\Policies\Microsoft\Windows\Explorer")){
+    #    New-Item -Path "HKCU:\SOFTWARE\Policies\Microsoft\Windows\Explorer" -Force | Out-Null
+    #}
+    #Set-ItemProperty -Path "HKCU:\SOFTWARE\Policies\Microsoft\Windows\Explorer" -Name "EnableLegacyBalloonNotifications" -Type DWord -Value 1
+    #write-Host "Legacy Notifications enabled"
 
-    if (!(Test-Path "HKLM:\Software\Microsoft\Windows NT\CurrentVersion\MTCUVC")){
-        New-Item -Path "HKLM:\Software\Microsoft\Windows NT\CurrentVersion\MTCUVC" -Force | Out-Null
-    }
-    Set-ItemProperty -Path "HKLM:\Software\Microsoft\Windows NT\CurrentVersion\MTCUVC" -Name "EnableMtcUvc" -Type DWord -Value 0
-    write-Host "Legacy Volume control enabled"
+    #if (!(Test-Path "HKLM:\Software\Microsoft\Windows NT\CurrentVersion\MTCUVC")){
+    #    New-Item -Path "HKLM:\Software\Microsoft\Windows NT\CurrentVersion\MTCUVC" -Force | Out-Null
+    #}
+    #Set-ItemProperty -Path "HKLM:\Software\Microsoft\Windows NT\CurrentVersion\MTCUVC" -Name "EnableMtcUvc" -Type DWord -Value 0
+    #write-Host "Legacy Volume control enabled"
     if (!(Test-Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager")){
         Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" -Name "SilentInstalledAppsEnabled" -Type DWord -Value 0
     }
@@ -1231,36 +1276,30 @@ $smalltaskbaricons.Add_Click({
 
 })
 
-$WindowsCleaner.Add_Click({
+$RemoveTakeOwnership.Add_Click({
 
-    <#
-    "Windows Cleaner" is my new project! Its like CClneaer but inside batch file
-    script below will download script and make it into bat file
-    #>
+    # Update 1 : Remove 'Windows Cleaner' code from here!
 
-    $URL = "https://raw.githubusercontent.com/teeotsa/windows-cleaner/main/Cleaner.bat"
-    $CleanerFile = Invoke-WebRequest $URL -ErrorAction SilentlyContinue | Out-Null
-    $Username = $env:UserName
-    $File = "C:\Users\$Username\Desktop\Cleaner.bat"
-    #To test if this method works!
-    #write-Host $CleanerFile
-    New-Item -Path $File -Value $CleanerFile | Out-Null
-    Start-Sleep -Seconds 1
-    if (!(Get-Item "C:\Users\$Username\Desktop\Cleaner.bat")){
-        write-Host "Something went wrong!"
+    if(Test-Path -LiteralPath "HKLM:\SOFTWARE\Classes\*\shell\TakeOwnership"){
+        Clear-Host
+        write-Host "This might take some time to remove! Please wait..."
+        if(Test-Path -LiteralPath "HKLM:\SOFTWARE\Classes\*\shell\TakeOwnership"){
+        Remove-Item -Path "Microsoft.PowerShell.Core\Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Classes\*\shell\TakeOwnership" -Force -Recurse -ErrorAction SilentlyContinue | Out-Null
+        }
+        if(Test-Path -LiteralPath "HKLM:\SOFTWARE\Classes\Directory\shell\TakeOwnership"){
+        Remove-Item -Path "Microsoft.PowerShell.Core\Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Classes\Directory\shell\TakeOwnership" -Force -Recurse -ErrorAction SilentlyContinue | Out-Null
+        }
+        write-Host "'Take Ownership' context menu is gone!"
     } else {
-        Start-Process "C:\Users\$Username\Desktop\Cleaner.bat" -Verb RunAs -ErrorAction SilentlyContinue | Out-Null
-        write-Host "Destination of the script : C:\Users\$Username\Desktop\Cleaner.bat"
+        Clear-Host 
+        Write-Host "Can't find `"Take Ownership`" registry keys. It might be already removed?" -ForegroundColor Yellow -BackgroundColor Black
     }
 })
 
 $RemoveBloat.Add_Click({
 
-    $Holo = "HKCU:\Software\Microsoft\Windows\CurrentVersion\Holographic"    
-    If (Test-Path $Holo) {
-        Set-ItemProperty -Path $Holo -Name FirstRunSucceeded -Value -Type DWord -Value 0 
-    }
-      
+    # Update 1 : Removed Holographic registry keys from here! Kinda useless.
+
         $BloatwareList = @(
         "Microsoft.3DBuilder"
         "Microsoft.Microsoft3DViewer"
@@ -1340,7 +1379,8 @@ $RemoveBloat.Add_Click({
         "*Microsoft.MSPaint*"
         "*Microsoft.MicrosoftStickyNotes*"
         "*Microsoft.Windows.Photos*"
-        "*Microsoft.WindowsCalculator*"
+        # Update 1 : Commneted out Calculator because some people might need it!
+        #"*Microsoft.WindowsCalculator*"
         "*Microsoft.WindowsStore*"
         )
 
@@ -1391,7 +1431,14 @@ $RemoveBloat.Add_Click({
             Write-Output "Removing `"$Key`" from registry"
             Remove-Item $Key -Recurse -Force -ErrorAction SilentlyContinue | Out-Null
         }
+
+        write-Host "Bloatware uninstalled!"
  
+# Update 1 : Removed ability to permanently remove bloatware applications! Working on it to improve it!
+# You can still use it, you just need to commnet out this part and import modules part!
+
+<#
+
         function removePermanently{
             $AppsFolder = "$env:ProgramFiles\WindowsApps";
             TakeOwnership -Path $AppsFolder
@@ -1406,8 +1453,7 @@ Answer (Y/N):"
             'y'{ removePermanently };
             'n'{ write-Host "This step will be skipped!"};
         }
-
-        write-Host "Bloatware uninstalled!"
+#>
 
 })
 
@@ -1429,7 +1475,10 @@ $UninstallEdge.Add_Click({
 #C:\Program Files (x86)\Microsoft\Edge\Application\84.0.522.63\Installer
 #.\setup.exe --uninstall --system-level --verbose-logging --force-uninstall
 
-$microsoftpath = "C:\Program Files (x86)\Microsoft"
+# Update 1 : removed $microsoftpath because it wasn't used!
+# $microsoftpath = "C:\Program Files (x86)\Microsoft"
+
+
 $edgepath = "C:\Program Files (x86)\Microsoft\Edge\Application\*.*.*.*\Installer"
 $arguments = "--uninstall --system-level --verbose-logging --force-uninstall"
 
@@ -1506,19 +1555,21 @@ if(Test-Path "C:\Program Files (x86)\Microsoft\Edge\Application"){
 
 $TakeOwnership.Add_Click({
 
-    function AddTakeOwnershipContextMenu{
+    # Update 1 : Made 'Take Ownership' code part better! Also removed alot of useless parts of the code
+
+    if(!(Test-Path -LiteralPath "HKLM:\SOFTWARE\Classes\*\shell\TakeOwnership")){
         write-Host "Adding 'Take Ownership' to context menu!"
         if((Test-Path -LiteralPath "HKLM:\SOFTWARE\Classes\*\shell\TakeOwnership") -ne $true){
         New-Item "HKLM:\SOFTWARE\Classes\*\shell\TakeOwnership" -force -ea SilentlyContinue
         }
         if((Test-Path -LiteralPath "HKLM:\SOFTWARE\Classes\*\shell\TakeOwnership\command") -ne $true){
-            New-Item "HKLM:\SOFTWARE\Classes\*\shell\TakeOwnership\command" -force -ea SilentlyContinue
+        New-Item "HKLM:\SOFTWARE\Classes\*\shell\TakeOwnership\command" -force -ea SilentlyContinue
         }
         if((Test-Path -LiteralPath "HKLM:\SOFTWARE\Classes\Directory\shell\TakeOwnership") -ne $true){
-            New-Item "HKLM:\SOFTWARE\Classes\Directory\shell\TakeOwnership" -force -ea SilentlyContinue
+        New-Item "HKLM:\SOFTWARE\Classes\Directory\shell\TakeOwnership" -force -ea SilentlyContinue
         }
         if((Test-Path -LiteralPath "HKLM:\SOFTWARE\Classes\Directory\shell\TakeOwnership\command") -ne $true){
-            New-Item "HKLM:\SOFTWARE\Classes\Directory\shell\TakeOwnership\command" -force -ea SilentlyContinue
+        New-Item "HKLM:\SOFTWARE\Classes\Directory\shell\TakeOwnership\command" -force -ea SilentlyContinue
         }
         New-ItemProperty -LiteralPath 'HKLM:\SOFTWARE\Classes\*\shell\TakeOwnership' -Name '(default)' -Value 'Take Ownership' -PropertyType String -Force -ea SilentlyContinue;
         New-ItemProperty -LiteralPath 'HKLM:\SOFTWARE\Classes\*\shell\TakeOwnership' -Name 'HasLUAShield' -Value '' -PropertyType String -Force -ea SilentlyContinue;
@@ -1534,44 +1585,51 @@ $TakeOwnership.Add_Click({
         New-ItemProperty -LiteralPath 'HKLM:\SOFTWARE\Classes\Directory\shell\TakeOwnership\command' -Name '(default)' -Value 'powershell -windowstyle hidden -command "Start-Process cmd -ArgumentList ''/c takeown /f \"%1\" /r /d y && icacls \"%1\" /grant *S-1-3-4:F /c /l /q'' -Verb runAs' -PropertyType String -Force -ea SilentlyContinue;
         New-ItemProperty -LiteralPath 'HKLM:\SOFTWARE\Classes\Directory\shell\TakeOwnership\command' -Name 'IsolatedCommand' -Value 'powershell -windowstyle hidden -command "Start-Process cmd -ArgumentList ''/c takeown /f \"%1\" /r /d y && icacls \"%1\" /grant *S-1-3-4:F /c /l /q'' -Verb runAs' -PropertyType String -Force -ea SilentlyContinue;
         write-Host "'Take Ownership' is added into context menu!"
-    }
-    
-    function RemoveTakeOwnershipContextMenu{
-
-        Clear-Host
-        write-Host "This might take some time to remove! Please wait..."
-        if(Test-Path -LiteralPath "HKLM:\SOFTWARE\Classes\*\shell\TakeOwnership"){
-            Remove-Item -Path "Microsoft.PowerShell.Core\Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Classes\*\shell\TakeOwnership" -Force -Recurse -ErrorAction SilentlyContinue | Out-Null
-        }
-        if(Test-Path -LiteralPath "HKLM:\SOFTWARE\Classes\Directory\shell\TakeOwnership"){
-            Remove-Item -Path "Microsoft.PowerShell.Core\Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Classes\Directory\shell\TakeOwnership" -Force -Recurse -ErrorAction SilentlyContinue | Out-Null
-        }
-        write-Host "'Take Ownership' context menu is gone!"
-        
-    }
-
-    function ThrowError{
-        Clear-Host
-        write-Host "'Take Ownership' is already in context menu! Do you want to remove it?"
-        $Answer = read-Host "Answer with (Y/N)"
-        if($Answer -eq "y"){
-            Clear-Host
-            write-Host "'Take Ownership' will be removed..."
-            RemoveTakeOwnershipContextMenu
-        } elseif($Answer -eq "n"){
-            Clear-Host
-            write-Host "'Take Ownership' wont be removed!"
-        } else {
-            ThrowError
-        }
-    }
-
-    if(!(Test-Path -LiteralPath "HKLM:\SOFTWARE\Classes\*\shell\TakeOwnership")){
-        AddTakeOwnershipContextMenu
     } else {
-        ThrowError
+        Clear-Host 
+        Write-Host "You already have `"Take Onwership`" added into your context menu!" -ForegroundColor Yellow -BackgroundColor Black
     }
 
+})
+
+# Update 1 : Added button so you can edit this script
+
+$EditScript.Add_Click({
+    $DebloaterFile = $PSCommandPath;
+    Start-Process -FilePath "powershell_ise.exe" -ArgumentList "`"$DebloaterFile`"";
+})
+
+$LegacyVolume.Add_CheckStateChanged({
+
+    if ($LegacyVolume.Checked -eq $True){
+        if (!(Test-Path "HKLM:\Software\Microsoft\Windows NT\CurrentVersion\MTCUVC")){
+            New-Item -Path "HKLM:\Software\Microsoft\Windows NT\CurrentVersion\MTCUVC" -Force | Out-Null
+        }
+        Set-ItemProperty -Path "HKLM:\Software\Microsoft\Windows NT\CurrentVersion\MTCUVC" -Name "EnableMtcUvc" -Type DWord -Value 0
+        write-Host "Legacy Volume control enabled!"
+        return;
+    }
+    if (!(Test-Path "HKLM:\Software\Microsoft\Windows NT\CurrentVersion\MTCUVC")){
+        New-Item -Path "HKLM:\Software\Microsoft\Windows NT\CurrentVersion\MTCUVC" -Force | Out-Null
+    }
+    Set-ItemProperty -Path "HKLM:\Software\Microsoft\Windows NT\CurrentVersion\MTCUVC" -Name "EnableMtcUvc" -Type DWord -Value 1
+    write-Host "Legacy Volume Control disabled!"
+})
+
+$LegacyNotifications.Add_CheckStateChanged({
+    if ($LegacyNotifications.Checked -eq $True){
+        if (!(Test-Path "HKCU:\SOFTWARE\Policies\Microsoft\Windows\Explorer")){
+            New-Item -Path "HKCU:\SOFTWARE\Policies\Microsoft\Windows\Explorer" -Force | Out-Null
+        }
+        Set-ItemProperty -Path "HKCU:\SOFTWARE\Policies\Microsoft\Windows\Explorer" -Name "EnableLegacyBalloonNotifications" -Type DWord -Value 1 
+        Write-Host "Legacy Notifications have been enabled!"
+        return;
+    }
+    if (!(Test-Path "HKCU:\SOFTWARE\Policies\Microsoft\Windows\Explorer")){
+        New-Item -Path "HKCU:\SOFTWARE\Policies\Microsoft\Windows\Explorer" -Force | Out-Null
+    }
+    Set-ItemProperty -Path "HKCU:\SOFTWARE\Policies\Microsoft\Windows\Explorer" -Name "EnableLegacyBalloonNotifications" -Type DWord -Value 0 
+    Write-Host "Legacy Notifications has been disabled"
 })
 
 [void]$Form.ShowDialog()
