@@ -1,7 +1,6 @@
 Add-Type -AssemblyName System.Windows.Forms
 [System.Windows.Forms.Application]::EnableVisualStyles()
 
-<#
 $WindowsVersion = [System.Environment]::OSVersion.Version.Major
 if (!($WindowsVersion -eq "10")){
     Clear-Host
@@ -11,7 +10,7 @@ Script will close in 5 seconds!") -ForegroundColor Yellow -BackgroundColor Black
     exit
     return;
 }
-#>
+
 If (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]'Administrator')) {
 	Start-Process powershell.exe "-NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`"" -Verb RunAs
 	Exit
