@@ -6,9 +6,9 @@ if (!($WindowsVersion -eq "10")){
     Clear-Host
     Write-Host ("This script is designed to run only on Windows 10. You can always comment out this but its not recommended. 
 Script will close in 5 seconds!") -ForegroundColor Yellow -BackgroundColor Black
-    Start-Sleep -Seconds 5
-    exit
-    return;
+    #Start-Sleep -Seconds 5
+    #exit
+    #return;
 }
 
 If (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]'Administrator')) {
@@ -28,8 +28,8 @@ if (!(Test-Path "$ModuleFolder\forceRemove.psm1")){
     exit;
 }
 #>
-Import-Module "$ModuleFolder\forceRemove.psm1" -Global -Force
-Import-Module "$ModuleFolder\showMessage.psm1" -Global -Force
+Import-Module "$ModuleFolder\forceRemove.psm1" -Global -Force -ErrorAction SilentlyContinue | Out-Null
+Import-Module "$ModuleFolder\showMessage.psm1" -Global -Force -ErrorAction SilentlyContinue | Out-Null
 
 
 #Some Form settings
@@ -235,7 +235,8 @@ $essentialtweaks.Add_Click({
 
     Write-Host "Running O&O Shutup with Not Recommended Settings"
     Import-Module BitsTransfer
-    Start-BitsTransfer -Source "https://raw.githubusercontent.com/teeotsa/win10script/master/ooshutup10.cfg" -Destination ooshutup10.cfg
+    # Update 2 : Fixed O&OSHUTUP10 Config Link.
+    Start-BitsTransfer -Source "https://raw.githubusercontent.com/teeotsa/windows-10-debloat/main/ooshutup10.cfg" -Destination ooshutup10.cfg
     Start-BitsTransfer -Source "https://dl5.oo-software.com/files/ooshutup10/OOSU10.exe" -Destination OOSU10.exe
     ./OOSU10.exe ooshutup10.cfg /quiet
 
