@@ -1,0 +1,1 @@
+powershell "%CD%\win10debloat.ps1"
