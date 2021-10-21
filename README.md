@@ -16,22 +16,35 @@ Some applications may refuse to install/run with this script, but you can always
 - Windows **8.1**
 - Windows **8.0**
 - Windows **7**
+- Anything below Windows **7**
 
 ⚠ - Should be supported (Works with tweaks)
-- Windows 11 
+- Windows 11 **21H2**
+- Windows 11 **Beta/Insider Builds**
 
 # Restore?
 
-Script should make **restore point** for you before starting with everything else. So, if you still have that **restore point**, you can use that to restore your settings. What to do if you don't have that **restore point** anymore? Well, then you can just reinstall Windows or use my restore scripts.
+Script should make **restore point** for you before starting with everything else.
+So, if you still have that **restore point**, you can use that to restore your settings.
+What to do if you don't have that **restore point** anymore?
+Well, then you can just reinstall Windows or use my restore scripts.
 You can find those restore scripts [here!](https://github.com/teeotsa/windows-10-debloat/tree/main/restoreScripts)
+
+
+You can also find those restore script inside ur debloater folder. 
+
+![safkGQx7Ft](https://user-images.githubusercontent.com/78772453/138323360-7eef4efd-8585-466e-b2b8-979feeeb7c89.png)
 
 # How to run this script?
 
-Open **PowerShell** as admin and set Execution Policy to unrestricted with this command (NOTE: Admin privileges required)
-```
-Set-ExecutionPolicy Unrestricted -Force
-```
-After its done, you can just run ``win10debloat.ps1``
+Just run ``runScript.bat`` as Administrator
+
+![5DSsCisPzs](https://user-images.githubusercontent.com/78772453/138323161-dd89826e-13b9-43f8-a788-fecc59321941.png)
+
+
+# What happens when i can't enable something?
+
+Well, then open issue or contact me via Discord : **Teeotsa#6167** and i will try to help you as much as i can
 
 # Archive 
 
