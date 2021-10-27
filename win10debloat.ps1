@@ -2,7 +2,7 @@ Add-Type -AssemblyName System.Windows.Forms
 [System.Windows.Forms.Application]::EnableVisualStyles()
 
 
-# Change $True to $False to bypass version checking 
+# Change `$True` to `$False` to bypass version checking 
 $BypassVersionCheck = $True
 
 
