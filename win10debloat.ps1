@@ -5,6 +5,9 @@ Add-Type -AssemblyName System.Windows.Forms
 # Change `$True` to `$False` to bypass version checking 
 $BypassVersionCheck = $True
 
+# Added Dark Mode theme for PowerShell
+$Host.UI.RawUI.BackgroundColor = "Black"
+Clear-Host
 
 # Added switch to turn on/off version checking
 if($BypassVersionCheck -eq $True){
@@ -65,20 +68,18 @@ if (!(Test-Path "$ModuleFolder\forceRemove.psm1")){
 #Import-Module "$ModuleFolder\showMessage.psm1" -Global -Force -ErrorAction SilentlyContinue | Out-Null
 
 
-#Some Form settings
-$MainFormName = "Windows 10 Debloater"
 $OtherTweaksLeft = 295
 $SystemTweaksLeft = 40
 
 $Form                            = New-Object system.Windows.Forms.Form
-$Form.text                       = $MainFormName
+$Form.text                       = "Windows 10 Debloater GUI"
 $Form.StartPosition              = "CenterScreen"
 $Form.TopMost                    = $false
 $Form.BackColor                  = [System.Drawing.ColorTranslator]::FromHtml("#b8b8b8")
 $Form.AutoScaleDimensions        = '192, 192'
 $Form.AutoSize                   = $False
 $Form.ClientSize                 = '575, 500'
-$Form.FormBorderStyle            = 'Sizable'
+$Form.FormBorderStyle            = 'FixedSingle'
 
 $Label3                          = New-Object system.Windows.Forms.Label
 $Label3.text                     = "System Tweaks"
@@ -219,7 +220,9 @@ $EditScript.height               = 30
 $EditScript.location             = New-Object System.Drawing.Point($OtherTweaksLeft,305)
 $EditScript.Font                 = New-Object System.Drawing.Font('Microsoft Sans Serif',12)
 
+#region Commented-Out-Stuff
 <#
+
 
 $LegacyVolume                    = New-Object System.Windows.Forms.CheckBox
 $LegacyVolume.Location           = New-Object System.Drawing.Size(297,340)
@@ -262,6 +265,7 @@ if($LegacyNotificationsKey -eq 1){
     $LegacyNotifications.Checked = $True
 }
 #>
+#endregion
 
 # $LegacyNotifications,$LegacyVolume,$AdminAccount
 $Form.controls.AddRange(@($MiscLabel,$EditScript,$TakeOwnership,$UninstallEdge,$RemoveBloat,$disablewindowsupdate,$enablewindowsupdate,$smalltaskbaricons,$Label16,$Label17,$Label18,$Label19,$RemoveTakeOwnership,$Panel1,$Panel2,$Label3,$Label15,$Panel4,$PictureBox1,$Label1,$Label4,$Panel3,$essentialtweaks,$backgroundapps,$cortana,$actioncenter,$darkmode,$visualfx,$onedrive,$lightmode))
@@ -438,27 +442,28 @@ $essentialtweaks.Add_Click({
         "XboxGipSvc"
         "LanmanWorkstation"
         "workfolderssvc"
-        "WlanSvc"
-        "W32Time"
+        #"WlanSvc" ... WLAN AutoConfig (Needed for Wi-Fi)
+        #"W32Time" ... Windows Time (Needed for automatic time syncing)
         "WpnService"
         "icssvc"
         "MixedRealityOpenXRSvc"
         "WMPNetworkSvc"
         "LicenseManager"
+        #"wlidsvc" ... Microsoft Account Sign-in Assistant (Needed if you wish to not use Microsoft Accounts)
         "wisvc"
         "Wecsvc"
         "WerSvc"
         "FrameServer"
-        "WbioSrvc"
-        "SDRSVC"
-        "WFDSConMgrSvc"
+        #"WbioSrvc" ... Windows Biometric Service (Needed for Fingerprints and Face)
+        #"SDRSVC" ... Windows Backup (Needed for Restore Points, Windows Backup features)
+        #"WFDSConMgrSvc" ... Wi-Fi Direct Services Connection Manager Service (Might be needed for Wi-Fi)
         "WebClient"
         "TokenBroker"
         "WalletService"
-        "VSS"
-        "vds"
-        "TabletInputService"
-        "StorSvc"
+        #"VSS" ... Volume Shadow Copy (Needed for Windows Backup, Restore Points)
+        #"vds" ... Virtual Disk (Needed for Disk Managment)
+        #"TabletInputService" ... Touch Keyboard and Handwriting Panel Service (Needed for Windows Terminal and other input devices)
+        #"StorSvc" ... Storage Service (Needed for Disk Managment and other storage related stuff)
         "SharedRealitySvc"
         "sppsvc"
         "SCPolicySvc"
@@ -491,7 +496,7 @@ $essentialtweaks.Add_Click({
         "SmsRouter"
         "InstallService"
         "smphost"
-        "swprv"
+        #"swprv" ... Microsoft Software Shadow Copy Provider (Needed for Application Backups)
         "NgcCtnrSvc"
         "NgcSvc"
         "MsKeyboardFilter"
@@ -500,7 +505,6 @@ $essentialtweaks.Add_Click({
         "edgeupdate"
         "MicrosoftEdgeElevationService"
         "AppVClient"
-        "wlidsvc"
         "diagnosticshub.standardcollector.service"
         "iphlpsvc"
         "lfsvc"
@@ -511,10 +515,10 @@ $essentialtweaks.Add_Click({
         "TrkWks"
         "DispBrokerDesktopSvc"
         "DisplayEnhancementService"
-        "WdiSystemHost"
-        "WdiServiceHost"
-        "DPS"
-        "diagsvc"
+        #"WdiSystemHost" ... Diagnostic System Host (Needed for Diagnostics)
+        #"WdiServiceHost" ... Diagnostic Service Host (Needed for Diagnostics)
+        #"DPS" ... Diagnostic Policy Service (Needed for Diagnostics)
+        #"diagsvc" ... Diagnostic Execution Service (Needed for Diagnostics)
         "DoSvc"
         "DusmSvc"
         "DsSvc"
@@ -522,13 +526,13 @@ $essentialtweaks.Add_Click({
         "VaultSvc"
         "DiagTrack"
         "autotimesvc"
-        "bthserv"
-        "BTAGService"
-        "BDESVC"
-        "tzautoupdate"
-        "WinHttpAutoProxySvc"
-        "lmhosts"
-        "IKEEXT"
+        #"bthserv" ... Bluetooth Support Service (Needed for bluetooth)
+        #"BTAGService" ... Bluetooth Audio Gateway Service (Needed for bluetooth)
+        #"BDESVC" ... BitLocker Drive Encryption Service (Needed for BitLocker)
+        #"tzautoupdate" ... Auto Time Zone Updater (Needed for automatic time syncing...)
+        #"WinHttpAutoProxySvc" ... WinHTTP Web Proxy Auto-Discovery Service
+        #"lmhosts" ... TCP/IP NetBIOS Helper
+        #"IKEEXT" ... IKE and AuthIP IPsec Keying Modules
     )
 
     foreach ($Service in $Services) {
@@ -924,6 +928,17 @@ $essentialtweaks.Add_Click({
     }
     Set-ItemProperty -Path $ImmersiveControlPanelPath -Name "SettingsPageVisibility" -Type String -Value $Lines
     #>
+
+    # Fix automatic time syncing
+    Set-Service -Name W32Time -StartupType Automatic
+    Start-Service -Name W32Time
+
+    $Trigger = New-ScheduledTaskTrigger -AtLogOn
+    $User = "Administrator"
+    $Action = New-ScheduledTaskAction -Execute "net start w32time"
+    $Description = "This task was made by Teeotsa's script! You can safely delete this task if you wish not to have auto syncing time!"
+    Register-ScheduledTask -TaskName "Auto Time Sync" -Trigger $Trigger -User $User -Action $Action -RunLevel Highest -Description $Description
+
     Start-Sleep -Seconds 1
     Stop-Process -Name explorer -Force -PassThru
     Write-Host "Tweaks are done!"
