@@ -1,5 +1,9 @@
 # Windows 10 Debloater Script
 
+Discord Link (if you have any issues) : **https://discord.gg/JtMvqaNR5V**
+
+⚠ This project is kinda out-dated and i don't really have to update it either! Im focusing on my [**Windows 11 Debloater**](https://github.com/teeotsa/windows-11-debloat) because its my most popular project! ⚠
+
 ⚠ Disclaimer: You're doing this at your own risk, I am not responsible for any data loss or damage that may occur.
 
 This script might break something important for You. But if you are looking **Windows 7 like experience without any UWP Applications** then this script is perfect for you!
