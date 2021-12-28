@@ -1,20 +1,28 @@
 Add-Type -AssemblyName System.Windows.Forms
 [System.Windows.Forms.Application]::EnableVisualStyles()
 
-
 # Change `$True` to `$False` to bypass version checking 
-$BypassVersionCheck = $True
+$BypassVersionCheck = $False
+
+# Added Variable to control if the module importing is enabled or no!
+$AllowModuleImport = $False
 
 # Added Dark Mode theme for PowerShell
 $Host.UI.RawUI.BackgroundColor = "Black"
 Clear-Host
+
+Write-Host "This project is kinda out-dated!
+I just have no time to update it, maybe i'll do it in the future. Who knows.
+You could use my Windows 11's debloater script for Windows 10. Just remove 
+version checking!
+" -ForegroundColor Cyan
+Write-Host " - Teeotsa`n`n" -ForegroundColor Green
 
 # Added switch to turn on/off version checking
 if($BypassVersionCheck -eq $True){
     # Fixed bug where i uncommented out version checking :D
     $WindowsVersion = [System.Environment]::OSVersion.Version.Major
     if (!($WindowsVersion -eq "10")){
-        Clear-Host
         Write-Host ("This script is designed to run only on Windows 10. You can always comment out this but its not recommended. 
 Script will close in 5 seconds!") -ForegroundColor Yellow -BackgroundColor Black
         Start-Sleep -Seconds 5
@@ -27,32 +35,23 @@ If (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]:
 	Exit
 }
 
-# Clear-Host
-
 # Added auto importing for modules
 $_ModulePath = "$PSScriptRoot\bin\modules";
 # Import modules only if modules folder exists
-if(Test-Path $_ModulePath){
-
-    $Modules = Get-ChildItem -LiteralPath $_ModulePath -ErrorAction SilentlyContinue #| Out-Null
-
-    $_FoundModuleCount = $Modules.Count;
-
-    #Execute this block of code only when there is more than 1 module found!
-    if ($_FoundModuleCount -ge 1){
-
-        foreach($Module in $Modules){
-        
-            Import-Module $Module -Global -Force -ErrorAction SilentlyContinue | Out-Null
-            Write-Host "`"$Module`" found, importing now..." -ForegroundColor Green -BackgroundColor Black
-             
+# Added Variable to control if the module importing is enabled or no!
+if($AllowModuleImport -eq $True){
+    if(Test-Path $_ModulePath){
+        $Modules = Get-ChildItem -LiteralPath $_ModulePath -ErrorAction SilentlyContinue #| Out-Null
+        $_FoundModuleCount = $Modules.Count;
+        #Execute this block of code only when there is more than 1 module found!
+        if ($_FoundModuleCount -ge 1){
+            foreach($Module in $Modules){
+                Import-Module $Module -Global -Force -ErrorAction SilentlyContinue | Out-Null
+                Write-Host "`"$Module`" found, importing now..." -ForegroundColor Green -BackgroundColor Black
+            }
         }
-
     }
-
-
 }
-
 
 # Import custom made modules
 # Removed this requirement because why not!
@@ -220,10 +219,6 @@ $EditScript.height               = 30
 $EditScript.location             = New-Object System.Drawing.Point($OtherTweaksLeft,305)
 $EditScript.Font                 = New-Object System.Drawing.Font('Microsoft Sans Serif',12)
 
-#region Commented-Out-Stuff
-<#
-
-
 $LegacyVolume                    = New-Object System.Windows.Forms.CheckBox
 $LegacyVolume.Location           = New-Object System.Drawing.Size(297,340)
 $LegacyVolume.Size               = New-Object System.Drawing.Size(110,15)
@@ -236,24 +231,10 @@ $LegacyNotifications.Size        = New-Object System.Drawing.Size(130,15)
 $LegacyNotifications.Text        = "Legacy Notifications"
 $LegacyNotifications.Checked     = $False
 
-$AdminAccount                    = new-object System.Windows.Forms.checkbox
-$AdminAccount.Location           = new-object System.Drawing.Size(42,455)
-$AdminAccount.Size               = new-object System.Drawing.Size(100,15)
-$AdminAccount.Text               = "Admin Account"
-$AdminAccount.Checked            = $False;
-
-#>
-
-<#
 #Tick Legacy Volume Control Checkbox if its enabled!
 $VolumeControlKey = Get-ItemPropertyValue -Path "HKLM:\Software\Microsoft\Windows NT\CurrentVersion\MTCUVC" -Name "EnableMtcUvc" | Out-Null
 if($VolumeControlKey -eq 0){
     $LegacyVolume.Checked = $True;
-}
-
-$AdminAcc = Get-LocalUser -Name "Administrator"
-if ($AdminAcc.Enabled -eq $True){
-    $AdminAccount.Checked = $True;
 }
 
 $LegacyNotificationsKey = Get-ItemPropertyValue -Path "HKCU:\SOFTWARE\Policies\Microsoft\Windows\Explorer" -Name "EnableLegacyBalloonNotifications"
@@ -264,11 +245,8 @@ if(!($GetLegacyNotifications)){
 if($LegacyNotificationsKey -eq 1){
     $LegacyNotifications.Checked = $True
 }
-#>
-#endregion
 
-# $LegacyNotifications,$LegacyVolume,$AdminAccount
-$Form.controls.AddRange(@($MiscLabel,$EditScript,$TakeOwnership,$UninstallEdge,$RemoveBloat,$disablewindowsupdate,$enablewindowsupdate,$smalltaskbaricons,$Label16,$Label17,$Label18,$Label19,$RemoveTakeOwnership,$Panel1,$Panel2,$Label3,$Label15,$Panel4,$PictureBox1,$Label1,$Label4,$Panel3,$essentialtweaks,$backgroundapps,$cortana,$actioncenter,$darkmode,$visualfx,$onedrive,$lightmode))
+$Form.controls.AddRange(@($LegacyNotifications,$LegacyVolume,$MiscLabel,$EditScript,$TakeOwnership,$UninstallEdge,$RemoveBloat,$disablewindowsupdate,$enablewindowsupdate,$smalltaskbaricons,$Label16,$Label17,$Label18,$Label19,$RemoveTakeOwnership,$Panel1,$Panel2,$Label3,$Label15,$Panel4,$PictureBox1,$Label1,$Label4,$Panel3,$essentialtweaks,$backgroundapps,$cortana,$actioncenter,$darkmode,$visualfx,$onedrive,$lightmode))
 
 $essentialtweaks.Add_Click({
 
@@ -1338,7 +1316,7 @@ $RemoveBloat.Add_Click({
         "*Microsoft.MicrosoftStickyNotes*"
         "*Microsoft.Windows.Photos*"
         # Update 1 : Commneted out Calculator because some people might need it!
-        #"*Microsoft.WindowsCalculator*"ˇ
+        #"*Microsoft.WindowsCalculator*"Ė‡
         # Commented out Windows Store because some people might want to use it
         #"*Microsoft.WindowsStore*"
         )
@@ -1403,20 +1381,7 @@ Answer (Y/N):"
 #>
 
 })
-<#
-$AdminAccount.Add_CheckStateChanged({
 
-    $Chk = $AdminAccount
-    if ($AdminAccount.Checked){
-        write-Host "Administrator account is enabled!"
-        Get-LocalUser -Name "Administrator" | Enable-LocalUser
-    } else {
-        write-Host "Administrator account is disabled!"
-        Get-LocalUser -Name "Administrator" | Disable-LocalUser
-    }
-
-})
-#>
 $UninstallEdge.Add_Click({
 
     #C:\Program Files (x86)\Microsoft\Edge\Application\84.0.522.63\Installer
@@ -1562,7 +1527,7 @@ $EditScript.Add_Click({
     $DebloaterFile = $PSCommandPath;
     Start-Process -FilePath "powershell_ise.exe" -ArgumentList "`"$DebloaterFile`"";
 })
-<#
+
 $LegacyVolume.Add_CheckStateChanged({
 
     if ($LegacyVolume.Checked -eq $True){
@@ -1595,5 +1560,5 @@ $LegacyNotifications.Add_CheckStateChanged({
     Set-ItemProperty -Path "HKCU:\SOFTWARE\Policies\Microsoft\Windows\Explorer" -Name "EnableLegacyBalloonNotifications" -Type DWord -Value 0 
     Write-Host "Legacy Notifications has been disabled"
 })
-#>
+
 [void]$Form.ShowDialog()
